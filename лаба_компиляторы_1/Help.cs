@@ -27,12 +27,13 @@ namespace лаба_компиляторы_1
             {
                 AppSettings.ApplyFontSizeToControls(this.Controls);
 
+                string resourcesFolder = Path.Combine(Application.StartupPath, "..", "..", "Properties", "resources");
                 string filePath = null;
 
                 if (Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName == "ru")
-                    filePath = @"C:\Users\ПК\source\repos\лаба_компиляторы_1\лаба_компиляторы_1\Properties\resources\ru.html";
+                    filePath = Path.Combine(resourcesFolder, "ru.html");
                 else
-                    filePath = @"C:\Users\ПК\source\repos\лаба_компиляторы_1\лаба_компиляторы_1\Properties\resources\en.html";
+                    filePath = Path.Combine(resourcesFolder, "en.html");
 
 
                 if (File.Exists(filePath))
