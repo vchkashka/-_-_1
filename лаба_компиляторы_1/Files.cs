@@ -27,7 +27,7 @@ namespace лаба_компиляторы_1
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
                 Title = "Создать файл",
-                Filter = "Текстовый файл (*.txt)|*.txt|Файл CSV (*.csv)|*.csv|Файл docx (*.docx)|*.docx|Все файлы (*.*)|*.*",
+                Filter = "Текстовый файл (*.txt)|*.txt|Файл CSV (*.csv)|*.csv|Все файлы (*.*)|*.*",
                 DefaultExt = "txt",
                 AddExtension = true
             };
@@ -53,7 +53,7 @@ namespace лаба_компиляторы_1
                 using (OpenFileDialog openFileDialog = new OpenFileDialog
                 {
                     Title = "Открыть файл",
-                    Filter = "Текстовые файлы (*.txt)|*.txt|Файлы CSV (*.csv)|*.csv|Файл docx (*.docx)|*.docx|Все файлы (*.*)|*.*"
+                    Filter = "Текстовые файлы (*.txt)|*.txt|Файлы CSV (*.csv)|*.csv|*.docx|Все файлы (*.*)|*.*"
                 })
                     if (openFileDialog.ShowDialog() == DialogResult.OK)
                     {

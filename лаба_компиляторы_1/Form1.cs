@@ -77,7 +77,6 @@ namespace лаба_компиляторы_1
             string[] keywords = { "int", "string", "public", "void", "if", "else", "return", "class", "static", "new", "private" };
             int selectionStart = rtb.SelectionStart;
 
-            // Отключаем перерисовку, чтобы ускорить
             rtb.SuspendLayout();
 
             foreach (string word in keywords)
@@ -91,7 +90,6 @@ namespace лаба_компиляторы_1
                 }
             }
 
-            // Восстанавливаем выделение и обновляем отображение
             rtb.SelectionStart = selectionStart;
             rtb.SelectionLength = 0;
             rtb.SelectionColor = Color.Black;
