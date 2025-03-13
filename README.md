@@ -36,11 +36,22 @@ const char имя_массива[] = "значение";
 
  ## Диаграмма состояний сканера
 ![Диаграмма](https://github.com/user-attachments/assets/0b7134dd-4fbe-4540-bcec-278398e83a18)
+Рисунок 1 - Диаграмма состояний сканера
 
  ## Тестовые примеры
+ На рисунках 2-5 представлены тестовые примеры запуска разработанного сканера.
 ![image](https://github.com/user-attachments/assets/55e990f2-4814-4241-b119-3c8dd7a788ca)
+Рисунок 2 - Тестовый пример 1
+
 ![image](https://github.com/user-attachments/assets/1b8319b4-8014-4542-a764-99b5a0376775)
+Рисунок 3 - Тестовый пример 2
+
 ![image](https://github.com/user-attachments/assets/d3101847-7623-48b4-8c0a-97b6caba5d55)
+Рисунок 4 - Тестовый пример 3
+
+![image](https://github.com/user-attachments/assets/77fbb70a-2e98-49bc-93eb-21f625116125)
+Рисунок 5 - Тестовый пример 4
+
 
 ## Установка
 Для установки и запуска проекта выполните следующие шаги:
