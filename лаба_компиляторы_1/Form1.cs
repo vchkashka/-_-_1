@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -9,7 +11,11 @@ namespace лаба_компиляторы_1
 {
     public partial class Form1 : Form
     {
-        private Files fileManager; 
+        private Files fileManager;
+        private Stack<string> undoStack = new Stack<string>();
+        private Stack<string> redoStack = new Stack<string>();
+        private bool isTextChangedByUndoRedo = false;
+        private bool isHighlightingSyntax = false;
 
         public Form1()
         {
@@ -72,65 +78,6 @@ namespace лаба_компиляторы_1
             }
         }
 
-        private void HighlightSyntax(RichTextBox rtb)
-        {
-            string[] keywords = { "int", "string", "public", "void", "if", "else", "return", "class", "static", "new", "private" };
-            int selectionStart = rtb.SelectionStart;
-
-            rtb.SuspendLayout();
-
-            foreach (string word in keywords)
-            {
-                int startIndex = 0;
-                while ((startIndex = rtb.Text.IndexOf(word, startIndex)) != -1)
-                {
-                    rtb.Select(startIndex, word.Length);
-                    rtb.SelectionColor = Color.Blue;
-                    startIndex += word.Length;
-                }
-            }
-
-            rtb.SelectionStart = selectionStart;
-            rtb.SelectionLength = 0;
-            rtb.SelectionColor = Color.Black;
-            rtb.ResumeLayout();
-        }
-        public RichTextBox GetActiveRichTextBox()
-        {
-            if (tabControl1.SelectedTab != null && tabControl1.SelectedTab.Controls.Count > 0)
-            {
-                return tabControl1.SelectedTab.Controls[0] as RichTextBox;
-            }
-            return null;
-        }
-
-        private void DrawLineNumbers(Graphics g, RichTextBox richTextBox, PictureBox lineNumberBox)
-        {
-            g.Clear(lineNumberBox.BackColor);
-            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-
-            int firstIndex = richTextBox.GetCharIndexFromPosition(new Point(0, 0));
-            int firstLine = richTextBox.GetLineFromCharIndex(firstIndex);
-            int totalLines = richTextBox.Lines.Length;
-
-            int lineHeight = TextRenderer.MeasureText("0", richTextBox.Font).Height;
-            int y = 0;
-
-            string maxLineNumber = totalLines.ToString();
-            int maxWidth = TextRenderer.MeasureText(maxLineNumber, richTextBox.Font).Width + 10;
-
-            if (lineNumberBox.Width != maxWidth)
-            {
-                lineNumberBox.Width = maxWidth;
-            }
-
-            for (int i = firstLine; y < richTextBox.Height; i++)
-            {
-                y = (i - firstLine) * lineHeight;
-                g.DrawString((i + 1).ToString(), richTextBox.Font, Brushes.Black, 5, y);
-            }
-        }
-
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
             fileManager.createFile();
@@ -148,6 +95,15 @@ namespace лаба_компиляторы_1
         private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
         {
             fileManager.openFile();
+        }
+
+        public RichTextBox GetActiveRichTextBox()
+        {
+            if (tabControl1.SelectedTab != null && tabControl1.SelectedTab.Controls.Count > 0)
+            {
+                return tabControl1.SelectedTab.Controls[0] as RichTextBox;
+            }
+            return null;
         }
 
         private void toolStripButton3_Click(object sender, EventArgs e)
@@ -331,36 +287,104 @@ namespace лаба_компиляторы_1
                 fileManager.saveToFile(rtb);
         }
 
+        private void HighlightSyntax(RichTextBox rtb)
+        {
+            string[] keywords = { "const ", "char " };
+            int selectionStart = rtb.SelectionStart;
+            int selectionLength = rtb.SelectionLength;
+
+            rtb.SuspendLayout();
+            int scrollPos = rtb.GetPositionFromCharIndex(rtb.SelectionStart).Y;
+
+            rtb.SelectAll();
+            rtb.SelectionColor = Color.Black;
+
+            foreach (string word in keywords)
+            {
+                MatchCollection matches = Regex.Matches(rtb.Text, $@"\b{word}\b");
+                foreach (Match match in matches)
+                {
+                    rtb.Select(match.Index, match.Length);
+                    rtb.SelectionColor = Color.Blue;
+                }
+            }
+
+            rtb.SelectionStart = selectionStart;
+            rtb.SelectionLength = selectionLength;
+            rtb.SelectionColor = Color.Black;
+            rtb.ScrollToCaret();
+            rtb.ResumeLayout();
+        }
         private void RichTextBox_TextChanged(object sender, EventArgs e)
         {
             if (sender is RichTextBox rtb)
             {
-                rtb.Modified = true;
+                if (!isTextChangedByUndoRedo && !isHighlightingSyntax)
+                {
+                    undoStack.Push(rtb.Text);
+                    redoStack.Clear();
+                    rtb.Modified = true;
+                }
+                isHighlightingSyntax = true;
                 HighlightSyntax(rtb);
-            }  
+                isHighlightingSyntax = false;
+            }
+
         }
 
         private void toolStripButton18_Click(object sender, EventArgs e)
         {
             RichTextBox rtb = GetActiveRichTextBox();
-            if (rtb != null && rtb.CanUndo) rtb.Undo();
+            if (rtb != null && undoStack.Count > 0)
+            {
+                redoStack.Push(rtb.Text);
+                isTextChangedByUndoRedo = true;
+                rtb.Text = undoStack.Pop();
+                isTextChangedByUndoRedo = false;
+                    rtb.SelectionStart = rtb.Text.Length;
+                    rtb.ScrollToCaret();
+                }
         }
         private void отменитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
             RichTextBox rtb = GetActiveRichTextBox();
-            if (rtb != null && rtb.CanUndo) rtb.Undo();
+            if (rtb != null && undoStack.Count > 0)
+                {
+                    redoStack.Push(rtb.Text);
+                    isTextChangedByUndoRedo = true;
+                    rtb.Text = undoStack.Pop();
+                    isTextChangedByUndoRedo = false;
+                    rtb.SelectionStart = rtb.Text.Length;
+                    rtb.ScrollToCaret();
+                }
         }
 
         private void toolStripButton17_Click(object sender, EventArgs e)
         {
             RichTextBox rtb = GetActiveRichTextBox();
-            if (rtb != null && rtb.CanRedo) rtb.Redo();
+            if (rtb != null&& redoStack.Count > 0)
+                {
+                    undoStack.Push(rtb.Text);
+                    isTextChangedByUndoRedo = true;
+                    rtb.Text = redoStack.Pop();
+                    isTextChangedByUndoRedo = false;
+                    rtb.SelectionStart = rtb.Text.Length;
+                    rtb.ScrollToCaret();
+                }
         }
 
         private void повторитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
             RichTextBox rtb = GetActiveRichTextBox();
-            if (rtb != null && rtb.CanRedo) rtb.Redo();
+            if (rtb != null && redoStack.Count > 0)
+                {
+                    undoStack.Push(rtb.Text);
+                    isTextChangedByUndoRedo = true;
+                    rtb.Text = redoStack.Pop();
+                    isTextChangedByUndoRedo = false;
+                    rtb.SelectionStart = rtb.Text.Length;
+                    rtb.ScrollToCaret();
+                }
         }
 
         private void toolStripButton12_Click(object sender, EventArgs e)
@@ -400,6 +424,34 @@ namespace лаба_компиляторы_1
             foreach (Form form in Application.OpenForms)
             {
                 AppSettings.UpdateFormLanguage(form);
+            }
+        }
+
+        private void DrawLineNumbers(Graphics g, RichTextBox richTextBox, PictureBox lineNumberBox)
+        {
+            g.Clear(lineNumberBox.BackColor);
+            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+
+            int firstIndex = richTextBox.GetCharIndexFromPosition(new Point(0, 0));
+            int firstLine = richTextBox.GetLineFromCharIndex(firstIndex);
+            int totalLines = richTextBox.Lines.Length;
+
+            int maxWidth = TextRenderer.MeasureText(totalLines.ToString(), richTextBox.Font).Width + 10;
+            if (lineNumberBox.Width != maxWidth)
+            {
+                lineNumberBox.Width = maxWidth;
+            }
+
+            int y = 0;
+            for (int i = firstLine; i < totalLines; i++)
+            {
+                Point pos = richTextBox.GetPositionFromCharIndex(richTextBox.GetFirstCharIndexFromLine(i));
+                y = pos.Y;
+
+                if (y >= richTextBox.Height)
+                    break;
+
+                g.DrawString((i + 1).ToString(), richTextBox.Font, Brushes.Black, 5, y);
             }
         }
 
@@ -452,6 +504,145 @@ namespace лаба_компиляторы_1
                 foreach (Form form in Application.OpenForms)
                 {
                     AppSettings.ApplyFontSizeToControls(form.Controls);
+                }
+            }
+        }
+
+        private string LocationDetection(string word, string text, int startIndex)
+        {
+            int start = text.IndexOf(word, startIndex) + 1;
+            int end = start + word.Length - 1;
+            return $"c {start} по {end} символ";
+        }
+
+        private void Lexer(string text)
+        {
+            string[] rows = text.Split('\n');
+
+            for (int i = 0; i < rows.Length; i++)
+            {
+                string row = rows[i];
+                int index = 0;
+                bool lastWasKeyword = false;
+
+                while (index < row.Length)
+                {
+                    char current = row[index];
+
+                    if (char.IsWhiteSpace(current))
+                    {
+                        if (lastWasKeyword)
+                        {
+                            dataGridView1.Rows.Add("4", "разделитель", "пробел", $"{i + 1} строка, c {index + 1} по {index + 1} символ");
+                            lastWasKeyword = false;
+                        }
+                        index++;
+                        continue;
+                    }
+
+                    if (current >= 'А' && current <= 'Я' || current >= 'а' && current <= 'я')
+                    {
+                        dataGridView1.Rows.Add("ERROR", "недопустимый символ", current.ToString(), $"{i + 1} строка, {index + 1} символ");
+                        index++;
+                        continue;
+                    }
+
+                    if (char.IsLetter(current) || current == '_')
+                    {
+                        int start = index;
+                        while (index < row.Length && ((row[index] >= 'A' && row[index] <= 'Z') ||
+                              (row[index] >= 'a' && row[index] <= 'z') ||
+                              (row[index] >= '0' && row[index] <= '9') ||
+                              row[index] == '_'))
+                            index++;
+
+                        string word = row.Substring(start, index - start);
+                        string location = $"{i + 1} строка, {LocationDetection(word, row, start)}";
+
+                        switch (word)
+                        {
+                            case "const":
+                                dataGridView1.Rows.Add("1", "ключевое слово", "const", location);
+                                lastWasKeyword = true;
+                                break;
+                            case "char":
+                                dataGridView1.Rows.Add("2", "ключевое слово", "char", location);
+                                lastWasKeyword = true;
+                                break;
+                            default:
+                                dataGridView1.Rows.Add("3", "идентификатор", word, location);
+                                break;
+                        }
+                        continue;
+                    }
+
+                    if (char.IsDigit(current))
+                    {
+                        int start = index;
+                        while (index < row.Length && char.IsDigit(row[index]))
+                            index++;
+
+                        string number = row.Substring(start, index - start);
+                        string location = $"{i + 1} строка, {LocationDetection(number, row, start)}";
+                        dataGridView1.Rows.Add("9", "целое без знака", number, location);
+                        continue;
+                    }
+
+                    switch (current)
+                    {
+                        case '[':
+                            dataGridView1.Rows.Add("5", "открывающаяся скобка", "[", $"{i + 1} строка, c {index + 1} по {index + 1} символ");
+                            break;
+                        case ']':
+                            dataGridView1.Rows.Add("6", "закрывающаяся скобка", "]", $"{i + 1} строка, c  {index + 1}  по  {index + 1}  символ  ");
+                            break;
+                        case '=':
+                            dataGridView1.Rows.Add("7", "оператор присваивания", "=", $"{i + 1} строка, c  {index + 1}  по  {index + 1}  символ");
+                            break;
+                        case ';':
+                            dataGridView1.Rows.Add("10", "конец оператора", ";", $"{i + 1} строка, c {index + 1} по {index + 1} символ");
+                            break;
+                        case '"':
+                            int start = index;
+                            index++;
+                            while (index < row.Length && row[index] != '"')
+                                index++;
+
+                            if (index < row.Length && row[index] == '"')
+                            {
+                                index++;
+                                string strValue = row.Substring(start, index - start);
+
+                                string location = $"{i + 1} строка, {LocationDetection(strValue, row, start)}";
+
+                                dataGridView1.Rows.Add("8", "строка", strValue, location);
+                            }
+                            else
+                            {
+                                dataGridView1.Rows.Add("ERROR", "недопустимый символ", row.Substring(start), $"{i + 1} строка, {start + 1}");
+                                index = row.Length;
+                            }
+                            continue;
+                        default:
+                            dataGridView1.Rows.Add("ERROR", "недопустимый символ", current.ToString(), $"{i + 1} строка, {index + 1}");
+                            break;
+                    }
+                    index++;
+                }
+            }
+        }
+
+        private void toolStripButton13_Click(object sender, EventArgs e)
+        {
+            dataGridView1.Rows.Clear();
+            foreach (TabPage tab in tabControl1.TabPages)
+            {
+                foreach (Control control in tab.Controls)
+                {
+                    if (control is RichTextBox rtb)
+                    {
+                        Lexer(rtb.Text);
+                    }
                 }
             }
         }

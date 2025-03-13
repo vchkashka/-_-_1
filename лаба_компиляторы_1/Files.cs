@@ -53,7 +53,7 @@ namespace лаба_компиляторы_1
                 using (OpenFileDialog openFileDialog = new OpenFileDialog
                 {
                     Title = "Открыть файл",
-                    Filter = "Текстовые файлы (*.txt)|*.txt|Файлы CSV (*.csv)|*.csv|*.docx|Все файлы (*.*)|*.*"
+                    Filter = "Текстовые файлы (*.txt)|*.txt|Файлы CSV (*.csv)|*.csv|Все файлы (*.*)|*.*"
                 })
                     if (openFileDialog.ShowDialog() == DialogResult.OK)
                     {
