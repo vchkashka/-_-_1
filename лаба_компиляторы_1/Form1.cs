@@ -16,6 +16,7 @@ namespace лаба_компиляторы_1
         private Stack<string> redoStack = new Stack<string>();
         private bool isTextChangedByUndoRedo = false;
         private bool isHighlightingSyntax = false;
+        Lexer lexer = new Lexer();
 
         public Form1()
         {
@@ -35,7 +36,7 @@ namespace лаба_компиляторы_1
             AppSettings.ApplyFontSizeToControls(this.Controls);
 
             fileManager = new Files(tabControl1, this);
-        } 
+        }
 
         void Timer_Tick(object sender, EventArgs e)
         {
@@ -133,7 +134,7 @@ namespace лаба_компиляторы_1
                     if (tab.Controls.Count > 0 && tab.Controls[0] is RichTextBox rtb && rtb.Modified)
                     {
                         DialogResult result = DialogResult.None;
-                        if (Thread.CurrentThread.CurrentUICulture == new CultureInfo("ru-RU"))
+                        if (toolStripMenuItem1.Text == "Английский язык")
                             result = MessageBox.Show($"Вы хотите сохранить изменения в файле {tab.Text}?", "Внимание!", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                         else
                             result = MessageBox.Show($"Do you want to save the changes to the {tab.Text} file?", "Warning!", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
@@ -162,12 +163,12 @@ namespace лаба_компиляторы_1
                     if (rtb.Modified)
                     {
                         DialogResult result = DialogResult.None;
-                        if (Thread.CurrentThread.CurrentUICulture == new CultureInfo("ru-RU"))
+                        if (toolStripMenuItem1.Text == "Английский язык")
                             result = MessageBox.Show($"Вы хотите сохранить изменения в файле {tab.Text}?", "Внимание!", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                         else
                             result = MessageBox.Show($"Do you want to save the changes to the {tab.Text} file?", "Warning!", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
 
-                        
+
 
                         if (result == DialogResult.Yes)
                         {
@@ -188,7 +189,7 @@ namespace лаба_компиляторы_1
                     else
                     {
                         DialogResult result = DialogResult.None;
-                        if (Thread.CurrentThread.CurrentUICulture == new CultureInfo("ru-RU"))
+                        if (toolStripMenuItem1.Text == "Английский язык")
                             result = MessageBox.Show($"Вы хотите закрыть файл {tab.Text}?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                         else
                             result = MessageBox.Show($"Do you want to close the {tab.Text} file?", "Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
@@ -203,6 +204,7 @@ namespace лаба_компиляторы_1
                             return;
                         }
                     }
+                dataGridView1.Rows.Clear();
             }
         }
 
@@ -221,7 +223,7 @@ namespace лаба_компиляторы_1
         {
             if (GetActiveRichTextBox().SelectedText.Length > 0)
             {
-                    GetActiveRichTextBox().SelectedText = "";
+                GetActiveRichTextBox().SelectedText = "";
             }
         }
 
@@ -281,7 +283,7 @@ namespace лаба_компиляторы_1
             if (e.Control && e.KeyCode == Keys.X) rtb.Cut();
             if (e.Control && e.KeyCode == Keys.A) rtb.SelectAll();
             if (e.KeyCode == Keys.F12) fileManager.saveAs(GetActiveRichTextBox());
-            
+
 
             if (e.Control && e.KeyCode == Keys.S)
                 fileManager.saveToFile(rtb);
@@ -306,6 +308,19 @@ namespace лаба_компиляторы_1
                 {
                     rtb.Select(match.Index, match.Length);
                     rtb.SelectionColor = Color.Blue;
+                }
+            }
+
+            foreach (char c in rtb.Text)
+            {
+                if (char.IsDigit(c))
+                {
+                    MatchCollection matches = Regex.Matches(rtb.Text, $@"{c}");
+                    foreach (Match match in matches)
+                    {
+                        rtb.Select(match.Index, match.Length);
+                        rtb.SelectionColor = Color.DarkOliveGreen;
+                    }
                 }
             }
 
@@ -341,50 +356,50 @@ namespace лаба_компиляторы_1
                 isTextChangedByUndoRedo = true;
                 rtb.Text = undoStack.Pop();
                 isTextChangedByUndoRedo = false;
-                    rtb.SelectionStart = rtb.Text.Length;
-                    rtb.ScrollToCaret();
-                }
+                rtb.SelectionStart = rtb.Text.Length;
+                rtb.ScrollToCaret();
+            }
         }
         private void отменитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
             RichTextBox rtb = GetActiveRichTextBox();
             if (rtb != null && undoStack.Count > 0)
-                {
-                    redoStack.Push(rtb.Text);
-                    isTextChangedByUndoRedo = true;
-                    rtb.Text = undoStack.Pop();
-                    isTextChangedByUndoRedo = false;
-                    rtb.SelectionStart = rtb.Text.Length;
-                    rtb.ScrollToCaret();
-                }
+            {
+                redoStack.Push(rtb.Text);
+                isTextChangedByUndoRedo = true;
+                rtb.Text = undoStack.Pop();
+                isTextChangedByUndoRedo = false;
+                rtb.SelectionStart = rtb.Text.Length;
+                rtb.ScrollToCaret();
+            }
         }
 
         private void toolStripButton17_Click(object sender, EventArgs e)
         {
             RichTextBox rtb = GetActiveRichTextBox();
-            if (rtb != null&& redoStack.Count > 0)
-                {
-                    undoStack.Push(rtb.Text);
-                    isTextChangedByUndoRedo = true;
-                    rtb.Text = redoStack.Pop();
-                    isTextChangedByUndoRedo = false;
-                    rtb.SelectionStart = rtb.Text.Length;
-                    rtb.ScrollToCaret();
-                }
+            if (rtb != null && redoStack.Count > 0)
+            {
+                undoStack.Push(rtb.Text);
+                isTextChangedByUndoRedo = true;
+                rtb.Text = redoStack.Pop();
+                isTextChangedByUndoRedo = false;
+                rtb.SelectionStart = rtb.Text.Length;
+                rtb.ScrollToCaret();
+            }
         }
 
         private void повторитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
             RichTextBox rtb = GetActiveRichTextBox();
             if (rtb != null && redoStack.Count > 0)
-                {
-                    undoStack.Push(rtb.Text);
-                    isTextChangedByUndoRedo = true;
-                    rtb.Text = redoStack.Pop();
-                    isTextChangedByUndoRedo = false;
-                    rtb.SelectionStart = rtb.Text.Length;
-                    rtb.ScrollToCaret();
-                }
+            {
+                undoStack.Push(rtb.Text);
+                isTextChangedByUndoRedo = true;
+                rtb.Text = redoStack.Pop();
+                isTextChangedByUndoRedo = false;
+                rtb.SelectionStart = rtb.Text.Length;
+                rtb.ScrollToCaret();
+            }
         }
 
         private void toolStripButton12_Click(object sender, EventArgs e)
@@ -425,6 +440,7 @@ namespace лаба_компиляторы_1
             {
                 AppSettings.UpdateFormLanguage(form);
             }
+
         }
 
         private void DrawLineNumbers(Graphics g, RichTextBox richTextBox, PictureBox lineNumberBox)
@@ -479,7 +495,7 @@ namespace лаба_компиляторы_1
             richTextBox.FontChanged += (s, e) => lineNumberBox.Invalidate();
 
             lineNumberBox.Paint += (s, e) => DrawLineNumbers(e.Graphics, richTextBox, lineNumberBox);
-            
+
             newTab.Controls.Add(richTextBox);
             newTab.Controls.Add(lineNumberBox);
             tabControl1.TabPages.Add(newTab);
@@ -508,130 +524,6 @@ namespace лаба_компиляторы_1
             }
         }
 
-        private string LocationDetection(string word, string text, int startIndex)
-        {
-            int start = text.IndexOf(word, startIndex) + 1;
-            int end = start + word.Length - 1;
-            return $"c {start} по {end} символ";
-        }
-
-        private void Lexer(string text)
-        {
-            string[] rows = text.Split('\n');
-
-            for (int i = 0; i < rows.Length; i++)
-            {
-                string row = rows[i];
-                int index = 0;
-                bool lastWasKeyword = false;
-
-                while (index < row.Length)
-                {
-                    char current = row[index];
-
-                    if (char.IsWhiteSpace(current))
-                    {
-                        if (lastWasKeyword)
-                        {
-                            dataGridView1.Rows.Add("4", "разделитель", "пробел", $"{i + 1} строка, c {index + 1} по {index + 1} символ");
-                            lastWasKeyword = false;
-                        }
-                        index++;
-                        continue;
-                    }
-
-                    if (current >= 'А' && current <= 'Я' || current >= 'а' && current <= 'я')
-                    {
-                        dataGridView1.Rows.Add("ERROR", "недопустимый символ", current.ToString(), $"{i + 1} строка, {index + 1} символ");
-                        index++;
-                        continue;
-                    }
-
-                    if (char.IsLetter(current) || current == '_')
-                    {
-                        int start = index;
-                        while (index < row.Length && ((row[index] >= 'A' && row[index] <= 'Z') ||
-                              (row[index] >= 'a' && row[index] <= 'z') ||
-                              (row[index] >= '0' && row[index] <= '9') ||
-                              row[index] == '_'))
-                            index++;
-
-                        string word = row.Substring(start, index - start);
-                        string location = $"{i + 1} строка, {LocationDetection(word, row, start)}";
-
-                        switch (word)
-                        {
-                            case "const":
-                                dataGridView1.Rows.Add("1", "ключевое слово", "const", location);
-                                lastWasKeyword = true;
-                                break;
-                            case "char":
-                                dataGridView1.Rows.Add("2", "ключевое слово", "char", location);
-                                lastWasKeyword = true;
-                                break;
-                            default:
-                                dataGridView1.Rows.Add("3", "идентификатор", word, location);
-                                break;
-                        }
-                        continue;
-                    }
-
-                    if (char.IsDigit(current))
-                    {
-                        int start = index;
-                        while (index < row.Length && char.IsDigit(row[index]))
-                            index++;
-
-                        string number = row.Substring(start, index - start);
-                        string location = $"{i + 1} строка, {LocationDetection(number, row, start)}";
-                        dataGridView1.Rows.Add("9", "целое без знака", number, location);
-                        continue;
-                    }
-
-                    switch (current)
-                    {
-                        case '[':
-                            dataGridView1.Rows.Add("5", "открывающаяся скобка", "[", $"{i + 1} строка, c {index + 1} по {index + 1} символ");
-                            break;
-                        case ']':
-                            dataGridView1.Rows.Add("6", "закрывающаяся скобка", "]", $"{i + 1} строка, c  {index + 1}  по  {index + 1}  символ  ");
-                            break;
-                        case '=':
-                            dataGridView1.Rows.Add("7", "оператор присваивания", "=", $"{i + 1} строка, c  {index + 1}  по  {index + 1}  символ");
-                            break;
-                        case ';':
-                            dataGridView1.Rows.Add("10", "конец оператора", ";", $"{i + 1} строка, c {index + 1} по {index + 1} символ");
-                            break;
-                        case '"':
-                            int start = index;
-                            index++;
-                            while (index < row.Length && row[index] != '"')
-                                index++;
-
-                            if (index < row.Length && row[index] == '"')
-                            {
-                                index++;
-                                string strValue = row.Substring(start, index - start);
-
-                                string location = $"{i + 1} строка, {LocationDetection(strValue, row, start)}";
-
-                                dataGridView1.Rows.Add("8", "строка", strValue, location);
-                            }
-                            else
-                            {
-                                dataGridView1.Rows.Add("ERROR", "недопустимый символ", row.Substring(start), $"{i + 1} строка, {start + 1}");
-                                index = row.Length;
-                            }
-                            continue;
-                        default:
-                            dataGridView1.Rows.Add("ERROR", "недопустимый символ", current.ToString(), $"{i + 1} строка, {index + 1}");
-                            break;
-                    }
-                    index++;
-                }
-            }
-        }
-
         private void toolStripButton13_Click(object sender, EventArgs e)
         {
             dataGridView1.Rows.Clear();
@@ -641,7 +533,28 @@ namespace лаба_компиляторы_1
                 {
                     if (control is RichTextBox rtb)
                     {
-                        Lexer(rtb.Text);
+
+                        HighlightSyntax(rtb);
+                        //parcer.Analyze(rtb.Text, dataGridView1);
+                        lexer.Analyze(rtb.Text, rtb, dataGridView1);
+                    }
+                }
+            }
+        }
+
+        private void пускToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            dataGridView1.Rows.Clear();
+            foreach (TabPage tab in tabControl1.TabPages)
+            {
+                foreach (Control control in tab.Controls)
+                {
+                    if (control is RichTextBox rtb)
+                    {
+
+                        HighlightSyntax(rtb);
+                        //parcer.Analyze(rtb.Text, dataGridView1);
+                        lexer.Analyze(rtb.Text, rtb, dataGridView1);
                     }
                 }
             }

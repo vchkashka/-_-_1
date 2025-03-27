@@ -117,33 +117,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="splitContainer1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 90</value>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="splitContainer1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
   </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="toolStripStatusLabel4.Size" type="System.Drawing.Size, System.Drawing">
     <value>157, 20</value>
   </data>
   <data name="toolStripStatusLabel4.Text" xml:space="preserve">
     <value>Current date and time:</value>
   </data>
-  <data name="statusStrip2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 214</value>
+  <data name="Column1.HeaderText" xml:space="preserve">
+    <value>Cod</value>
   </data>
-  <data name="dataGridView1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>931, 240</value>
+  <data name="Column2.HeaderText" xml:space="preserve">
+    <value>Type of token</value>
   </data>
-  <data name="tabPage2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>931, 240</value>
+  <data name="Column3.HeaderText" xml:space="preserve">
+    <value>Token</value>
+  </data>
+  <data name="Column4.HeaderText" xml:space="preserve">
+    <value>Location</value>
   </data>
   <data name="tabPage2.Text" xml:space="preserve">
     <value>Result</value>
-  </data>
-  <data name="tabControl2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>939, 269</value>
-  </data>
-  <data name="splitContainer1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>939, 535</value>
   </data>
   <data name="создатьToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>141, 26</value>
@@ -229,60 +227,6 @@
   <data name="правкаToolStripMenuItem.Text" xml:space="preserve">
     <value>Edit</value>
   </data>
-  <data name="постановкаЗадачиToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>341, 26</value>
-  </data>
-  <data name="постановкаЗадачиToolStripMenuItem.Text" xml:space="preserve">
-    <value>Problem definition</value>
-  </data>
-  <data name="грамматикаToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>341, 26</value>
-  </data>
-  <data name="грамматикаToolStripMenuItem.Text" xml:space="preserve">
-    <value>Grammar</value>
-  </data>
-  <data name="классификацияГрамматикиToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>341, 26</value>
-  </data>
-  <data name="классификацияГрамматикиToolStripMenuItem.Text" xml:space="preserve">
-    <value>Grammar classification</value>
-  </data>
-  <data name="методАнализаToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>341, 26</value>
-  </data>
-  <data name="методАнализаToolStripMenuItem.Text" xml:space="preserve">
-    <value>Analysis method</value>
-  </data>
-  <data name="диагностикаИНейтрализацияОшибокToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>341, 26</value>
-  </data>
-  <data name="диагностикаИНейтрализацияОшибокToolStripMenuItem.Text" xml:space="preserve">
-    <value>Diagnosis and neutralization of errors</value>
-  </data>
-  <data name="тестовыйПримерToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>341, 26</value>
-  </data>
-  <data name="тестовыйПримерToolStripMenuItem.Text" xml:space="preserve">
-    <value>Test example</value>
-  </data>
-  <data name="списокЛитературыToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>341, 26</value>
-  </data>
-  <data name="списокЛитературыToolStripMenuItem.Text" xml:space="preserve">
-    <value>List of literature</value>
-  </data>
-  <data name="исходныйКодПрограммыToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>341, 26</value>
-  </data>
-  <data name="исходныйКодПрограммыToolStripMenuItem.Text" xml:space="preserve">
-    <value>The source code of the program</value>
-  </data>
-  <data name="текстToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>50, 24</value>
-  </data>
-  <data name="текстToolStripMenuItem.Text" xml:space="preserve">
-    <value>Text</value>
-  </data>
   <data name="пускToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>54, 24</value>
   </data>
@@ -328,9 +272,6 @@
   <data name="видToolStripMenuItem.Text" xml:space="preserve">
     <value>View</value>
   </data>
-  <data name="menuStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>939, 28</value>
-  </data>
   <data name="toolStripButton1.ToolTipText" xml:space="preserve">
     <value>Create</value>
   </data>
@@ -363,9 +304,6 @@
   </data>
   <data name="toolStripButton4.ToolTipText" xml:space="preserve">
     <value>About program</value>
-  </data>
-  <data name="toolStrip1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 28</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -1498,10 +1436,6 @@
         ////////////////////////////////////////////////////////////////////////////////
         //////////////////////////////////8=
 </value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>Compiler</value>

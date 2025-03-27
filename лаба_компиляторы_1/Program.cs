@@ -36,6 +36,19 @@ namespace лаба_компиляторы_1
                 }
             }
         }
+        private static void ApplyResourcesToDataGridView(DataGridView dataGridView, ComponentResourceManager resources)
+        {
+            foreach (DataGridViewColumn column in dataGridView.Columns)
+            {
+                string columnName = column.Name;
+                string localizedHeader = resources.GetString($"Column{column.Index+1}.HeaderText");
+
+                if (!string.IsNullOrEmpty(localizedHeader))
+                {
+                    column.HeaderText = localizedHeader;
+                }
+            }
+        }
 
         private static void ApplyResourcesToStatusStrip(StatusStrip statusStrip, ComponentResourceManager resources)
         {
@@ -83,7 +96,11 @@ namespace лаба_компиляторы_1
                 {
                     ApplyResourcesToToolStrip(toolStrip, resources);
                 }
-                
+                else if (control is DataGridView dataGridView)
+                {
+                    ApplyResourcesToDataGridView(dataGridView, resources);
+                }
+
             }
             form.AutoSize = false;
         }
@@ -95,7 +112,11 @@ namespace лаба_компиляторы_1
                     {
                         ApplyResourcesToStatusStrip(statusStrip, resources);
                     }
-               else
+            else if (control is DataGridView dataGridView)
+                {
+                    ApplyResourcesToDataGridView(dataGridView, resources);
+                }
+                else
                {
                    resources.ApplyResources(control, control.Name);
                    if (control.HasChildren)
