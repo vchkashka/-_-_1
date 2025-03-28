@@ -17,6 +17,7 @@ namespace лаба_компиляторы_1
         private bool isTextChangedByUndoRedo = false;
         private bool isHighlightingSyntax = false;
         Lexer lexer = new Lexer();
+        //Parcer parcer = new Parcer();
 
         public Form1()
         {
@@ -36,6 +37,8 @@ namespace лаба_компиляторы_1
             AppSettings.ApplyFontSizeToControls(this.Controls);
 
             fileManager = new Files(tabControl1, this);
+
+            label1.Hide();
         }
 
         void Timer_Tick(object sender, EventArgs e)
@@ -535,8 +538,19 @@ namespace лаба_компиляторы_1
                     {
 
                         HighlightSyntax(rtb);
-                        //parcer.Analyze(rtb.Text, dataGridView1);
-                        lexer.Analyze(rtb.Text, rtb, dataGridView1);
+                        int countErrors = lexer.Analyze(rtb.Text, rtb, dataGridView1);
+                        if (countErrors > 0)
+                        {
+                            tabControl2.TabPages[0].Text = $"Обнаружено ошибок: {countErrors}";
+                            dataGridView1.Show();
+                            label1.Hide();
+                        }
+                        else
+                        {
+                            tabControl2.TabPages[0].Text = "Результат";
+                            dataGridView1.Hide();
+                            label1.Show();
+                        }
                     }
                 }
             }
@@ -551,10 +565,20 @@ namespace лаба_компиляторы_1
                 {
                     if (control is RichTextBox rtb)
                     {
-
                         HighlightSyntax(rtb);
-                        //parcer.Analyze(rtb.Text, dataGridView1);
-                        lexer.Analyze(rtb.Text, rtb, dataGridView1);
+                        int countErrors = lexer.Analyze(rtb.Text, rtb, dataGridView1);
+                        if (countErrors > 0)
+                        {
+                            tabControl2.TabPages[0].Text = $"Обнаружено ошибок: {countErrors}";
+                            dataGridView1.Show();
+                            label1.Hide();
+                        }
+                        else
+                        {
+                            tabControl2.TabPages[0].Text = "Результат";
+                            dataGridView1.Hide();
+                            label1.Show();
+                        }
                     }
                 }
             }

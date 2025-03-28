@@ -1,94 +1,163 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace лаба_компиляторы_1
 {
     internal class Parcer
     {
-        public Dictionary<int, string> dictionary = new Dictionary<int, string>();
-        private enum State { Start, Const, CharType, Identifier, BracketOpen, BracketNum, BracketClose, Equal, Quote, String, End }
-        private State state = State.Start;
-        private List<string> tokens = new List<string>();
-        private string buffer = "";
+        public List<Tuple<int, int>> tokens = new List<Tuple<int, int>>();
         DataGridView data = new DataGridView();
+        
 
-        public void Analyze(string text, DataGridView data)
+        private void ErrorSelection(int index, RichTextBox rtb)
         {
-            buffer = "";
-            this.data = data;
-            // text = text.Trim();
-            while (state != State.End)
-            {
-                for (int i = 0; i < text.Length; i++)
-            {
-                char c = text[i];
+            rtb.SuspendLayout();
+            int selectionStart = rtb.SelectionStart;
+            int selectionLength = rtb.SelectionLength;
 
-                    switch (state)
-                    {
-                        case State.Start:
-                            if (Regex.IsMatch(text.Substring(i), "^const\\b")) { tokens.Add("const"); i += 4; state = State.Const; }
-                            else Error("Ожидалось 'const'", i);
-                            break;
-                        case State.Const:
-                            if (Regex.IsMatch(text.Substring(i), "^char\\b")) { tokens.Add("char"); i += 3; state = State.CharType; }
-                            else Error("Ожидалось 'char'", i);
-                            break;
-                        case State.CharType:
-                            if (char.IsLetter(c) || c == '_') { buffer += c; state = State.Identifier; }
-                            else Error("Ожидался идентификатор", i);
-                            break;
-                        case State.Identifier:
-                            if (char.IsLetterOrDigit(c) || c == '_') buffer += c;
-                            else if (c == '[') { tokens.Add(buffer); buffer = ""; tokens.Add("["); state = State.BracketOpen; }
-                            else if (c == '=') { tokens.Add(buffer); buffer = ""; tokens.Add("="); state = State.Equal; }
-                            else Error("Некорректный идентификатор", i);
-                            break;
-                        case State.BracketOpen:
-                            if (char.IsDigit(c)) { buffer += c; state = State.BracketNum; }
-                            else if (c == ']') { tokens.Add("]"); state = State.Equal; }
-                            else Error("Ожидалось число или ']' внутри скобок", i);
-                            break;
-                        case State.BracketNum:
-                            if (char.IsDigit(c)) buffer += c;
-                            else if (c == ']') { tokens.Add(buffer); buffer = ""; tokens.Add("]"); state = State.Equal; }
-                            else Error("Некорректный размер массива", i);
-                            break;
-                        case State.Equal:
-                            if (c == '=') { tokens.Add("="); state = State.Quote; }
-                            else Error("Ожидался '='", i);
-                            break;
-                        case State.Quote:
-                            if (c == '"') { tokens.Add("\""); state = State.String; }
-                            else Error("Ожидалась '\"' для строки", i);
-                            break;
-                        case State.String:
-                            if (c == '"') { tokens.Add(buffer); buffer = ""; tokens.Add("\""); state = State.End; }
-                            else buffer += c;
-                            break;
-                        case State.End:
-                            if (c == ';') { tokens.Add(";"); Console.WriteLine("Разбор завершен"); return; }
-                            else Error("Ожидался ';'", i);
-                            break;
-                    }
+            rtb.SelectAll();
+            rtb.SelectionBackColor = rtb.BackColor;
+
+            rtb.Select(index, 1);
+            rtb.SelectionBackColor = Color.Red;
+
+            rtb.SelectionStart = selectionStart;
+            rtb.SelectionLength = selectionLength;
+
+            rtb.ResumeLayout();
+        }
+
+        public int Analyze(RichTextBox rtb, DataGridView data)
+        {
+            int countErrors = 0;
+            this.data = data;
+            int i = 0;
+            int state = 1;
+
+            while (state > 0)
+            {
+                var token = i < tokens.Count ? tokens[i] : null;
+                int position = token?.Item2 ?? -1;
+
+                switch (state)
+                {
+                    case 1:
+                        if (token == null || token.Item1 != 1)
+                        {
+                            Error("Ожидалось ключевое слово const", position);
+                            ErrorSelection(position-1, rtb);
+                            countErrors++;
+                            return countErrors;
+                        }
+                        else i++;
+                        state = 2;
+                        break;
+                    case 2:
+                        if (token == null || token.Item1 != 2)
+                        {
+                            Error("Ожидалось ключевое слово char", position);
+                            ErrorSelection(position-1, rtb);
+                            countErrors++;
+                            return countErrors;
+                        }
+                        else i++;
+                        state = 3;
+                        break;
+                    case 3:
+                        if (token == null || token.Item1 != 3)
+                        {
+                            Error("Ожидался идентификатор", position);
+                            ErrorSelection(position - 1, rtb);
+                            countErrors++;
+                            return countErrors;
+                        }
+                        else i++;
+                        state = 4;
+                        break;
+                    case 4:
+                        if (token == null || token.Item1 != 5)
+                        {
+                            Error("Пропущена [ ", position);
+                            ErrorSelection(position - 1, rtb);
+                            countErrors++;
+                            return countErrors;
+                        }
+                        else i++;
+                        state = 5;
+                        break;
+                    case 5:
+                        if (token == null || (token.Item1 != 6 && token.Item1 != 9))
+                        {
+                            Error("Пропущено число или ] ", position);
+                            ErrorSelection(position - 1, rtb);
+                            state = 7;
+                            countErrors++;
+                            return countErrors;
+                        }
+                        else if (token.Item1 == 9)
+                        {
+                            state = 6;
+                            i++;
+                        }
+                        else if (token.Item1 == 6)
+                        {
+                            state = 7;
+                            i++;
+                        }
+                        break;
+                    case 6:
+                        if (token == null || token.Item1 != 6)
+                        {
+                            Error("Пропущена ]", position);
+                            ErrorSelection(position - 1, rtb);
+                            countErrors++;
+                            return countErrors;
+                        }
+                        else i++;
+                        state = 7;
+                        break;
+                    case 7:
+                        if (token == null || token.Item1 != 7)
+                        {
+                            Error("Пропущен знак = ", position);
+                            ErrorSelection(position - 1, rtb);
+                            countErrors++;
+                            return countErrors;
+                        }
+                        else i++;
+                        state = 8;
+                        break;
+                    case 8:
+                        if (token == null || token.Item1 != 8)
+                        {
+                            Error("Ожидалась строка", position);
+                            ErrorSelection(position - 1, rtb);
+                            countErrors++;
+                            return countErrors;
+                        }
+                        else i++;
+                        state = 9;
+                        break;
+                    case 9:
+                        if (token == null || token.Item1 != 10)
+                        {
+                            Error("Ожидался символ ;", position);
+                            ErrorSelection(position - 1 , rtb);
+                            countErrors++;
+                        }
+                        return countErrors;
                 }
             }
-            Error("Неожиданный конец выражения", 0);
+            return countErrors;
         }
 
         private void Error(string message, int place)
         {
             this.data.Rows.Add(message, place);
-            // Добавить нейтрализацию ошибки (например, вставить ожидаемый символ)
         }
-
-        //public void PrintTokens()
-        //{
-        //    Console.WriteLine(string.Join(" ", tokens));
-        //}
     }
 }
