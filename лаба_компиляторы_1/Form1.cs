@@ -16,8 +16,8 @@ namespace лаба_компиляторы_1
         private Stack<string> redoStack = new Stack<string>();
         private bool isTextChangedByUndoRedo = false;
         private bool isHighlightingSyntax = false;
+        private bool isChangingBackground = false;
         Lexer lexer = new Lexer();
-        //Parcer parcer = new Parcer();
 
         public Form1()
         {
@@ -304,6 +304,7 @@ namespace лаба_компиляторы_1
             rtb.SelectAll();
             rtb.SelectionColor = Color.Black;
 
+
             foreach (string word in keywords)
             {
                 MatchCollection matches = Regex.Matches(rtb.Text, $@"\b{word}\b");
@@ -344,6 +345,8 @@ namespace лаба_компиляторы_1
                     rtb.Modified = true;
                 }
                 isHighlightingSyntax = true;
+
+
                 HighlightSyntax(rtb);
                 isHighlightingSyntax = false;
             }
@@ -353,7 +356,7 @@ namespace лаба_компиляторы_1
         private void toolStripButton18_Click(object sender, EventArgs e)
         {
             RichTextBox rtb = GetActiveRichTextBox();
-            if (rtb != null && undoStack.Count > 0)
+            if (rtb != null && undoStack.Count > 0 && isTextChangedByUndoRedo)
             {
                 redoStack.Push(rtb.Text);
                 isTextChangedByUndoRedo = true;
@@ -366,7 +369,7 @@ namespace лаба_компиляторы_1
         private void отменитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
             RichTextBox rtb = GetActiveRichTextBox();
-            if (rtb != null && undoStack.Count > 0)
+            if (rtb != null && undoStack.Count > 0 && isTextChangedByUndoRedo)
             {
                 redoStack.Push(rtb.Text);
                 isTextChangedByUndoRedo = true;
@@ -380,7 +383,7 @@ namespace лаба_компиляторы_1
         private void toolStripButton17_Click(object sender, EventArgs e)
         {
             RichTextBox rtb = GetActiveRichTextBox();
-            if (rtb != null && redoStack.Count > 0)
+            if (rtb != null && redoStack.Count > 0 && isTextChangedByUndoRedo)
             {
                 undoStack.Push(rtb.Text);
                 isTextChangedByUndoRedo = true;
@@ -394,7 +397,7 @@ namespace лаба_компиляторы_1
         private void повторитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
             RichTextBox rtb = GetActiveRichTextBox();
-            if (rtb != null && redoStack.Count > 0)
+            if (rtb != null && redoStack.Count > 0 && isTextChangedByUndoRedo)
             {
                 undoStack.Push(rtb.Text);
                 isTextChangedByUndoRedo = true;
@@ -527,6 +530,22 @@ namespace лаба_компиляторы_1
             }
         }
 
+        private void ClearErrorSelection(RichTextBox rtb)
+        {
+            isChangingBackground = true;
+            rtb.SuspendLayout();
+            int selectionStart = rtb.SelectionStart;
+            int selectionLength = rtb.SelectionLength;
+
+            rtb.SelectAll();
+            rtb.SelectionBackColor = Color.White; // Сбрасываем фон
+
+            rtb.SelectionStart = selectionStart;
+            rtb.SelectionLength = selectionLength;
+            rtb.ResumeLayout();
+            isChangingBackground = false;
+        }
+
         private void toolStripButton13_Click(object sender, EventArgs e)
         {
             dataGridView1.Rows.Clear();
@@ -536,7 +555,8 @@ namespace лаба_компиляторы_1
                 {
                     if (control is RichTextBox rtb)
                     {
-
+                        isTextChangedByUndoRedo = false;
+                        ClearErrorSelection(rtb);
                         HighlightSyntax(rtb);
                         int countErrors = lexer.Analyze(rtb.Text, rtb, dataGridView1);
                         if (countErrors > 0)
@@ -565,6 +585,8 @@ namespace лаба_компиляторы_1
                 {
                     if (control is RichTextBox rtb)
                     {
+                        isTextChangedByUndoRedo = false;
+                        ClearErrorSelection(rtb);
                         HighlightSyntax(rtb);
                         int countErrors = lexer.Analyze(rtb.Text, rtb, dataGridView1);
                         if (countErrors > 0)

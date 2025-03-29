@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
+using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -11,7 +13,6 @@ namespace лаба_компиляторы_1
     {
         public List<Tuple<int, int>> tokens = new List<Tuple<int, int>>();
         DataGridView data = new DataGridView();
-        
 
         private void ErrorSelection(int index, RichTextBox rtb)
         {
@@ -19,9 +20,10 @@ namespace лаба_компиляторы_1
             int selectionStart = rtb.SelectionStart;
             int selectionLength = rtb.SelectionLength;
 
-            rtb.SelectAll();
-            rtb.SelectionBackColor = rtb.BackColor;
+            //rtb.SelectAll();
+            //rtb.SelectionBackColor = Color.White;
 
+            if (index <= rtb.Text.Length) 
             rtb.Select(index, 1);
             rtb.SelectionBackColor = Color.Red;
 
@@ -33,6 +35,8 @@ namespace лаба_компиляторы_1
 
         public int Analyze(RichTextBox rtb, DataGridView data)
         {
+            //foreach (Tuple<int, int> token in tokens)
+            //MessageBox.Show($"{token.Item1}, {token.Item2}");
             int countErrors = 0;
             this.data = data;
             int i = 0;
@@ -41,28 +45,40 @@ namespace лаба_компиляторы_1
             while (state > 0)
             {
                 var token = i < tokens.Count ? tokens[i] : null;
-                int position = token?.Item2 ?? -1;
-
+                int position = token?.Item2 ?? rtb.Text.Length-1;
+                //MessageBox.Show($"{token.Item1}, {token.Item2}");
                 switch (state)
                 {
                     case 1:
-                        if (token == null || token.Item1 != 1)
+                        if (token == null || (token.Item1 != 1 && token.Item1 != 2))
                         {
                             Error("Ожидалось ключевое слово const", position);
-                            ErrorSelection(position-1, rtb);
+                            ErrorSelection(position - 1, rtb);
                             countErrors++;
-                            return countErrors;
+                            i++;
+                        }
+                        else if (token.Item1 != 1)
+                        {
+                            Error("Ожидалось ключевое слово const", position);
+                            ErrorSelection(position - 1, rtb);
+                            countErrors++;
                         }
                         else i++;
                         state = 2;
                         break;
                     case 2:
+                        if (token.Item1 == 3 && tokens[i + 1]?.Item1 == 3)
+                        {
+                            Error("Ожидалось ключевое слово char", position);
+                            ErrorSelection(position - 1, rtb);
+                            countErrors++;
+                            i++;
+                        } else
                         if (token == null || token.Item1 != 2)
                         {
                             Error("Ожидалось ключевое слово char", position);
-                            ErrorSelection(position-1, rtb);
+                            ErrorSelection(position - 1, rtb);
                             countErrors++;
-                            return countErrors;
                         }
                         else i++;
                         state = 3;
@@ -73,30 +89,41 @@ namespace лаба_компиляторы_1
                             Error("Ожидался идентификатор", position);
                             ErrorSelection(position - 1, rtb);
                             countErrors++;
-                            return countErrors;
                         }
                         else i++;
                         state = 4;
                         break;
                     case 4:
-                        if (token == null || token.Item1 != 5)
+                        if (token == null || (token.Item1 != 5 && token.Item1 != 6 && token.Item1 != 9))
                         {
-                            Error("Пропущена [ ", position);
+                            Error("Неожиданный символ, проверьте наличие [", position);
                             ErrorSelection(position - 1, rtb);
                             countErrors++;
-                            return countErrors;
+                            i++;
+                        }
+                        else if (token.Item1 != 5)
+                        {
+                            Error("Пропущена [", position);
+                            ErrorSelection(position - 1, rtb);
+                            countErrors++;
                         }
                         else i++;
-                        state = 5;
+                        state = 5;  
                         break;
                     case 5:
-                        if (token == null || (token.Item1 != 6 && token.Item1 != 9))
+                        if (token == null || (token.Item1 != 6 && token.Item1 != 9 && token.Item1 != 7))
+                        {
+                            Error("Пропущено число или ] ", position);
+                            ErrorSelection(position - 1, rtb);
+                            countErrors++;
+                            i++;
+                        }
+                        else if (token == null || (token.Item1 != 6 && token.Item1 != 9))
                         {
                             Error("Пропущено число или ] ", position);
                             ErrorSelection(position - 1, rtb);
                             state = 7;
                             countErrors++;
-                            return countErrors;
                         }
                         else if (token.Item1 == 9)
                         {
@@ -110,46 +137,90 @@ namespace лаба_компиляторы_1
                         }
                         break;
                     case 6:
-                        if (token == null || token.Item1 != 6)
+                        if (token == null || (token.Item1 != 6 && token.Item1 != 7))
                         {
                             Error("Пропущена ]", position);
                             ErrorSelection(position - 1, rtb);
                             countErrors++;
-                            return countErrors;
+                            i++;
+                        }
+                        else if (token.Item1 != 6)
+                        {
+                            Error("Пропущена ]", position);
+                            ErrorSelection(position - 1, rtb);
+                            countErrors++;
                         }
                         else i++;
                         state = 7;
                         break;
                     case 7:
-                        if (token == null || token.Item1 != 7)
+                        if (token == null || (token.Item1 != 7 && token.Item1 != 8))
                         {
-                            Error("Пропущен знак = ", position);
+                            Error("Ожидался знак = ", position);
                             ErrorSelection(position - 1, rtb);
                             countErrors++;
-                            return countErrors;
+                            i++;
+                        }
+                        else if (token.Item1 != 7)
+                        {
+                            Error("Ожидался знак = ", position);
+                            ErrorSelection(position - 1, rtb);
+                            countErrors++;
                         }
                         else i++;
                         state = 8;
                         break;
                     case 8:
-                        if (token == null || token.Item1 != 8)
+                        if (token == null || (token.Item1 != 8 && token.Item1 != 10))
                         {
                             Error("Ожидалась строка", position);
                             ErrorSelection(position - 1, rtb);
                             countErrors++;
-                            return countErrors;
+                            i++;
+                        }
+                        else if (token.Item1 != 8)
+                        {
+                            Error("Ожидалась строка", position);
+                            ErrorSelection(position - 1, rtb);
+                            countErrors++;
                         }
                         else i++;
                         state = 9;
                         break;
                     case 9:
-                        if (token == null || token.Item1 != 10)
+                        if (token == null)
                         {
                             Error("Ожидался символ ;", position);
-                            ErrorSelection(position - 1 , rtb);
+                            ErrorSelection(position - 1, rtb);
                             countErrors++;
+                            return countErrors;
                         }
-                        return countErrors;
+                        else if (token.Item1 != 10 && token.Item1 != 1)
+                        {
+                            Error("Ожидался символ ;", position);
+                            ErrorSelection(position - 1, rtb);
+                            countErrors++;
+
+                            if (i + 1 < tokens.Count)
+                            {
+                                state = 1;
+                                i++;
+                            }
+                        }
+                        else if (token.Item1 != 10)
+                        {
+                            Error("Ожидался символ ;", position);
+                            ErrorSelection(position - 1, rtb);
+                            countErrors++;
+                            if (i + 1 < tokens.Count) state = 1;
+                        }
+                        else if (i+1 < tokens.Count)
+                        {
+                            state = 1;
+                            i++;
+                        }    
+                        else return countErrors;
+                        break;
                 }
             }
             return countErrors;

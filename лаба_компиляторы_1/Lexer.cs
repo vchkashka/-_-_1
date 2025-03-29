@@ -10,23 +10,17 @@ namespace лаба_компиляторы_1
 {
     internal class Lexer
     {
-        private string LocationDetection(string word, string text, int startIndex)
-        {
-            int start = text.IndexOf(word, startIndex) + 1;
-            int end = start + word.Length - 1;
-            return $"c {start} по {end} символ";
-        }
-
         private void ErrorSelection(int index, RichTextBox rtb)
         {
             rtb.SuspendLayout();
             int selectionStart = rtb.SelectionStart;
             int selectionLength = rtb.SelectionLength;
 
-            rtb.SelectAll();
-            rtb.SelectionBackColor = rtb.BackColor;
+            //rtb.SelectAll();
+            //rtb.SelectionBackColor = ;
 
-            rtb.Select(index, 1);
+            if (index <= rtb.Text.Length)
+                rtb.Select(index, 1);
             rtb.SelectionBackColor = Color.Red;
 
             rtb.SelectionStart = selectionStart;
@@ -35,71 +29,71 @@ namespace лаба_компиляторы_1
             rtb.ResumeLayout();
         }
 
-        public int Analyze(string text, RichTextBox rtb, DataGridView dataGrid, int index = 0)
+        private void ExtractInvalidFragment(string row, ref int index, DataGridView dataGrid, ref int countErrors, RichTextBox rtb)
         {
+            int startError = index;
+            while (index < row.Length && !(row[index] >= 'A' && row[index] <= 'Z') && !(row[index] >= 'a' && row[index] <= 'z') && !char.IsDigit(row[index]) && !"[]=;\" ".Contains(row[index]))
+            {
+                index++;
+            }
+            string wordError = row.Substring(startError, index - startError);
+            dataGrid.Rows.Add($"Недопустимый фрагмент: {wordError}", $"{startError + 1}");
+            countErrors++;
+            ErrorSelection(startError, rtb);
+        }
+
+
+        public int Analyze(string text, RichTextBox rtb, DataGridView dataGrid)
+        {
+            int index = 0;
             int countErrors = 0;
             string row = text;
-            bool lastWasKeyword = false;
             Parcer parcer = new Parcer();
-
-            //MessageBox.Show($"{index}");
+            
             while (index < row.Length)
             {
-                
+
                 char current = row[index];
 
                 if (char.IsWhiteSpace(current))
                 {
-                    if (lastWasKeyword)
-                    {
-                        lastWasKeyword = false;
-                    }
                     index++;
                     continue;
                 }
 
-                if (current >= 'А' && current <= 'Я' || current >= 'а' && current <= 'я')
-                {
-                    dataGrid.Rows.Add($"Недопустимый символ: {current}", $"{index + 1}");
-                    countErrors++;
-                    ErrorSelection(index, rtb);
-                    break;
+                if (!(current >= 'A' && current <= 'Z') && !(current >= 'a' && current <= 'z') && !char.IsDigit(current) && !"[]=;\" ".Contains(current))
+                    {
+                        ExtractInvalidFragment(row, ref index, dataGrid, ref countErrors, rtb);
+                    if (index + 1 < row.Length && !char.IsLetter(row[index + 1]))
+                        index++;
                 }
 
                 if (char.IsLetter(current))
                 {
                     int start = index;
-                    bool error = false;
-                    while (index < row.Length && (char.IsDigit(row[index]) | char.IsLetter(row[index])))
+                    string word = null;
+                    while (index < row.Length && (char.IsDigit(row[index]) || char.IsLetter(row[index])))
                     {
-                        if (row[index] >= 'А' && row[index] <= 'Я' || row[index] >= 'а' && row[index] <= 'я')
+                        if (!(row[index] >= 'A' && row[index] <= 'Z') && !(row[index] >= 'a' && row[index] <= 'z') && !char.IsDigit(row[index]) && !"[]=;\" ".Contains(row[index]))
                         {
-                            error = true;
-                            break;
+                            ExtractInvalidFragment(row, ref index, dataGrid, ref countErrors, rtb);
                         }
-                        index++;
+                        else 
+                        {
+                            if (word == null)
+                                start = index;
+                            word = word + row[index];
+                            index++;
+                        }
                     }
-
-                    if (error)
-                    {
-                        dataGrid.Rows.Add($"Недопустимый символ: {row[index]}", $"{index + 1}");
-                        countErrors++;
-                        ErrorSelection(index, rtb);
-                        break;
-                    }
-
-                    string word = row.Substring(start, index - start);
-                    string location = $"{LocationDetection(word, row, start)}";
 
                     switch (word)
                     {
                         case "const":
                             parcer.tokens.Add(Tuple.Create(1, start + 1));
-                            lastWasKeyword = true;
                             break;
                         case "char":
                             parcer.tokens.Add(Tuple.Create(2, start + 1));
-                            lastWasKeyword = true;
                             break;
                         default:
                             parcer.tokens.Add(Tuple.Create(3, start + 1));
@@ -115,7 +109,6 @@ namespace лаба_компиляторы_1
                         index++;
 
                     string number = row.Substring(start, index - start);
-                    string location = $"{LocationDetection(number, row, start)}";
                     parcer.tokens.Add(Tuple.Create(9, start + 1));
                     continue;
                 }
@@ -133,9 +126,10 @@ namespace лаба_компиляторы_1
                         break;
                     case ';':
                         parcer.tokens.Add(Tuple.Create(10, index + 1));
-                        countErrors += parcer.Analyze(rtb, dataGrid);
-                        Analyze(text, rtb, dataGrid, index+1);
-                        return countErrors;
+                        break;
+                        //if (index+1 <= row.Length)
+                        //Analyze(text, rtb, dataGrid, index+1);
+                        //return countErrors;
                     case '"':
                         int start = index;
                         bool closingBracket = false;
@@ -155,7 +149,6 @@ namespace лаба_компиляторы_1
                         {
                             index++;
                             string strValue = row.Substring(start, index - start);
-                            string location = $"{LocationDetection(strValue, row, start)}";
                             parcer.tokens.Add(Tuple.Create(8, start));
                         }
                         else
@@ -163,17 +156,17 @@ namespace лаба_компиляторы_1
                             ErrorSelection(start, rtb);
                             dataGrid.Rows.Add($"Недопустимый символ: {row.Substring(start, 1)}", $"{start + 1}");
                             countErrors++;
-                            break;
                         }
                         continue;
-                    default:
-                        ErrorSelection(index, rtb);
-                        dataGrid.Rows.Add($"Недопустимый символ: {current.ToString()}", $"{index + 1}");
-                        countErrors++;
-                        continue;
+                    //default:
+                    //    ErrorSelection(index, rtb);
+                    //    dataGrid.Rows.Add($"Недопустимый символ: {current.ToString()}", $"{index + 1}");
+                    //    countErrors++;
+                    //    continue;
                 }
                 index++;
             }
+            countErrors += parcer.Analyze(rtb, dataGrid);
             return countErrors;
         }
     }
