@@ -14,8 +14,11 @@ namespace лаба_компиляторы_1
         public List<Tuple<int, int>> tokens = new List<Tuple<int, int>>();
         DataGridView data = new DataGridView();
 
+        //public bool isErrorSelection = true;
+
         private void ErrorSelection(int index, RichTextBox rtb)
         {
+            //isErrorSelection = true;
             rtb.SuspendLayout();
             int selectionStart = rtb.SelectionStart;
             int selectionLength = rtb.SelectionLength;
@@ -28,6 +31,7 @@ namespace лаба_компиляторы_1
             rtb.SelectionLength = selectionLength;
 
             rtb.ResumeLayout();
+           // isErrorSelection = false;
         }
 
         public int Analyze(RichTextBox rtb, DataGridView data)

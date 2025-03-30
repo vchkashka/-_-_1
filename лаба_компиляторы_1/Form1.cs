@@ -15,8 +15,6 @@ namespace лаба_компиляторы_1
         private Stack<string> undoStack = new Stack<string>();
         private Stack<string> redoStack = new Stack<string>();
         private bool isTextChangedByUndoRedo = false;
-        private bool isHighlightingSyntax = false;
-        private bool isChangingBackground = false;
         Lexer lexer = new Lexer();
 
         public Form1()
@@ -226,7 +224,10 @@ namespace лаба_компиляторы_1
         {
             if (GetActiveRichTextBox().SelectedText.Length > 0)
             {
+                //undoStack.Push(GetActiveRichTextBox().Text);
                 GetActiveRichTextBox().SelectedText = "";
+                
+                //redoStack.Clear();
             }
         }
 
@@ -294,6 +295,7 @@ namespace лаба_компиляторы_1
 
         private void HighlightSyntax(RichTextBox rtb)
         {
+            //isTextChangedByUndoRedo = true;
             string[] keywords = { "const ", "char " };
             int selectionStart = rtb.SelectionStart;
             int selectionLength = rtb.SelectionLength;
@@ -333,22 +335,21 @@ namespace лаба_компиляторы_1
             rtb.SelectionColor = Color.Black;
             rtb.ScrollToCaret();
             rtb.ResumeLayout();
+            //isTextChangedByUndoRedo = false;
         }
         private void RichTextBox_TextChanged(object sender, EventArgs e)
         {
             if (sender is RichTextBox rtb)
             {
-                if (!isTextChangedByUndoRedo && !isHighlightingSyntax)
+                if (!isTextChangedByUndoRedo)
                 {
                     undoStack.Push(rtb.Text);
                     redoStack.Clear();
-                    rtb.Modified = true;
                 }
-                isHighlightingSyntax = true;
 
-
+                isTextChangedByUndoRedo = true;
                 HighlightSyntax(rtb);
-                isHighlightingSyntax = false;
+                isTextChangedByUndoRedo = false;
             }
 
         }
@@ -356,55 +357,65 @@ namespace лаба_компиляторы_1
         private void toolStripButton18_Click(object sender, EventArgs e)
         {
             RichTextBox rtb = GetActiveRichTextBox();
-            if (rtb != null && undoStack.Count > 0 && isTextChangedByUndoRedo)
+            if (rtb != null && undoStack.Count > 0)
             {
-                redoStack.Push(rtb.Text);
-                isTextChangedByUndoRedo = true;
+                isTextChangedByUndoRedo = true; // Блокируем ненужные вызовы TextChanged
+
+                redoStack.Push(rtb.Text); // Сохраняем текущее состояние перед откатом
                 rtb.Text = undoStack.Pop();
-                isTextChangedByUndoRedo = false;
+
                 rtb.SelectionStart = rtb.Text.Length;
                 rtb.ScrollToCaret();
+                isTextChangedByUndoRedo = false;
+                
             }
         }
         private void отменитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
             RichTextBox rtb = GetActiveRichTextBox();
-            if (rtb != null && undoStack.Count > 0 && isTextChangedByUndoRedo)
+            if (rtb != null && undoStack.Count > 0)
             {
-                redoStack.Push(rtb.Text);
-                isTextChangedByUndoRedo = true;
+                isTextChangedByUndoRedo = true; // Блокируем ненужные вызовы TextChanged
+
+                redoStack.Push(rtb.Text); // Сохраняем текущее состояние перед откатом
                 rtb.Text = undoStack.Pop();
-                isTextChangedByUndoRedo = false;
+
                 rtb.SelectionStart = rtb.Text.Length;
                 rtb.ScrollToCaret();
+                isTextChangedByUndoRedo = false;
+
             }
         }
 
         private void toolStripButton17_Click(object sender, EventArgs e)
         {
             RichTextBox rtb = GetActiveRichTextBox();
-            if (rtb != null && redoStack.Count > 0 && isTextChangedByUndoRedo)
+            if (rtb != null && redoStack.Count > 0)
             {
-                undoStack.Push(rtb.Text);
                 isTextChangedByUndoRedo = true;
+
+                undoStack.Push(rtb.Text);
                 rtb.Text = redoStack.Pop();
-                isTextChangedByUndoRedo = false;
+
                 rtb.SelectionStart = rtb.Text.Length;
                 rtb.ScrollToCaret();
+                isTextChangedByUndoRedo = false;
             }
         }
 
         private void повторитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
             RichTextBox rtb = GetActiveRichTextBox();
-            if (rtb != null && redoStack.Count > 0 && isTextChangedByUndoRedo)
+            if (rtb != null && redoStack.Count > 0)
             {
-                undoStack.Push(rtb.Text);
                 isTextChangedByUndoRedo = true;
+
+                undoStack.Push(rtb.Text);
                 rtb.Text = redoStack.Pop();
-                isTextChangedByUndoRedo = false;
+
                 rtb.SelectionStart = rtb.Text.Length;
                 rtb.ScrollToCaret();
+                isTextChangedByUndoRedo = false;
             }
         }
 
@@ -507,7 +518,9 @@ namespace лаба_компиляторы_1
             tabControl1.TabPages.Add(newTab);
             tabControl1.SelectedTab = newTab;
 
+            isTextChangedByUndoRedo = true;
             HighlightSyntax(richTextBox);
+            isTextChangedByUndoRedo= false;
 
             fileManager.FilePaths.Add(richTextBox, fileName);
 
@@ -532,7 +545,7 @@ namespace лаба_компиляторы_1
 
         private void ClearErrorSelection(RichTextBox rtb)
         {
-            isChangingBackground = true;
+            //isTextChangedByUndoRedo = true;
             rtb.SuspendLayout();
             int selectionStart = rtb.SelectionStart;
             int selectionLength = rtb.SelectionLength;
@@ -543,11 +556,11 @@ namespace лаба_компиляторы_1
             rtb.SelectionStart = selectionStart;
             rtb.SelectionLength = selectionLength;
             rtb.ResumeLayout();
-            isChangingBackground = false;
         }
 
         private void toolStripButton13_Click(object sender, EventArgs e)
         {
+            isTextChangedByUndoRedo = true;
             dataGridView1.Rows.Clear();
             foreach (TabPage tab in tabControl1.TabPages)
             {
@@ -555,7 +568,9 @@ namespace лаба_компиляторы_1
                 {
                     if (control is RichTextBox rtb)
                     {
-                        isTextChangedByUndoRedo = false;
+                        //isTextChangedByUndoRedo = true;
+                        //undoStack.Push(rtb.Text);
+
                         ClearErrorSelection(rtb);
                         HighlightSyntax(rtb);
                         int countErrors = lexer.Analyze(rtb.Text, rtb, dataGridView1);
@@ -574,10 +589,12 @@ namespace лаба_компиляторы_1
                     }
                 }
             }
+            isTextChangedByUndoRedo = false;
         }
 
         private void пускToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            isTextChangedByUndoRedo = true;
             dataGridView1.Rows.Clear();
             foreach (TabPage tab in tabControl1.TabPages)
             {
@@ -585,7 +602,10 @@ namespace лаба_компиляторы_1
                 {
                     if (control is RichTextBox rtb)
                     {
-                        isTextChangedByUndoRedo = false;
+                        //isTextChangedByUndoRedo = true;
+
+                        //undoStack.Push(rtb.Text);
+
                         ClearErrorSelection(rtb);
                         HighlightSyntax(rtb);
                         int countErrors = lexer.Analyze(rtb.Text, rtb, dataGridView1);
@@ -604,6 +624,7 @@ namespace лаба_компиляторы_1
                     }
                 }
             }
+            isTextChangedByUndoRedo = false;
         }
     }
 }

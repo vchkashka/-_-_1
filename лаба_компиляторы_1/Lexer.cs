@@ -10,8 +10,11 @@ namespace лаба_компиляторы_1
 {
     internal class Lexer
     {
+       // public bool isErrorSelection = false;
+
         private void ErrorSelection(int index, RichTextBox rtb)
         {
+            //isErrorSelection = true;
             rtb.SuspendLayout();
             int selectionStart = rtb.SelectionStart;
             int selectionLength = rtb.SelectionLength;
@@ -27,6 +30,7 @@ namespace лаба_компиляторы_1
             rtb.SelectionLength = selectionLength;
 
             rtb.ResumeLayout();
+            //isErrorSelection = false;
         }
 
         private void ExtractInvalidFragment(string row, ref int index, DataGridView dataGrid, ref int countErrors, RichTextBox rtb)
