@@ -538,7 +538,7 @@ namespace лаба_компиляторы_1
             int selectionLength = rtb.SelectionLength;
 
             rtb.SelectAll();
-            rtb.SelectionBackColor = Color.White; // Сбрасываем фон
+            rtb.SelectionBackColor = Color.White;
 
             rtb.SelectionStart = selectionStart;
             rtb.SelectionLength = selectionLength;
