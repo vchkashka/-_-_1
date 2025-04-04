@@ -76,21 +76,28 @@ namespace лаба_компиляторы_1
                 {
                     int start = index;
                     string word = null;
-                    while (index < row.Length && (char.IsDigit(row[index]) || char.IsLetter(row[index])))
+                    while (index < row.Length)
                     {
                         if (!(row[index] >= 'A' && row[index] <= 'Z') && !(row[index] >= 'a' && row[index] <= 'z') && !char.IsDigit(row[index]) && !"[]=;\" ".Contains(row[index]))
                         {
                             ExtractInvalidFragment(row, ref index, dataGrid, ref countErrors, rtb);
                         }
-                        else 
+                        else if (char.IsDigit(row[index]) || char.IsLetter(row[index]))
                         {
                             if (word == null)
                                 start = index;
                             word = word + row[index];
                             index++;
                         }
+                        else
+                        {
+                            //index++;
+                            break;
+                        }
+                        //MessageBox.Show($"{word}, {start + 1}");
                     }
-
+                    
+                    //MessageBox.Show($"{word}, {}");
                     switch (word)
                     {
                         case "const":
@@ -156,9 +163,14 @@ namespace лаба_компиляторы_1
                             parcer.tokens.Add(Tuple.Create(8, start));
                         }
                         else
+                        if (!closingBracket)
                         {
-                            ErrorSelection(start, rtb);
-                            dataGrid.Rows.Add($"Недопустимый символ: {row.Substring(start, 1)}", $"{start + 1}");
+                            index++;
+                            string strValue = row.Substring(start, index - start - 1);
+                            parcer.tokens.Add(Tuple.Create(8, start));
+                            //ErrorSelection(start, rtb);
+                            //dataGrid.Rows.Add($"Недопустимый символ: {row.Substring(start, 1)}", $"{start + 1}");
+                            dataGrid.Rows.Add($"Не хватает \" в конце строки", $"{index - 2}");
                             countErrors++;
                         }
                         continue;
@@ -170,6 +182,7 @@ namespace лаба_компиляторы_1
                 }
                 index++;
             }
+            if (row.Length > 0 ) 
             countErrors += parcer.Analyze(rtb, dataGrid);
             return countErrors;
         }

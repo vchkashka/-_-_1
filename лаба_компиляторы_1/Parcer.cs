@@ -48,22 +48,15 @@ namespace лаба_компиляторы_1
                 var token = i < tokens.Count ? tokens[i] : null;
                 int position = token?.Item2 ?? rtb.Text.Length - 1;
                 //MessageBox.Show($"{token.Item1}, {token.Item2}");
-                if (tokens.Count == 0)
-                {
-                    Error("Пустой ввод", 0);
-                    return 1;
-                }
+                //if (tokens.Count == 0)
+                //{
+                //    Error("Пустой ввод", 0);
+                //    return 1;
+                //}
                 switch (state)
                 {
                     case 1:
-                        if (token == null)
-                        {
-                            Error("Неполный ввод, проверьте наличие всех необходимых символов", position);
-                            ErrorSelection(position - 1, rtb);
-                            countErrors++;
-                            return countErrors;
-                        }
-                        else if (token.Item1 != 1 && token.Item1 != 2)
+                        if (token != null && token.Item1 != 1 && token.Item1 != 2)
                         {
                             Error("Недопустимый фрагмент", position);
                             ErrorSelection(position - 1, rtb);
@@ -71,7 +64,7 @@ namespace лаба_компиляторы_1
                             i++;
                             state = 1;
                         }
-                        else if (token.Item1 != 1)
+                        else if (token == null || token.Item1 != 1)
                         {
                             Error("Ожидалось ключевое слово const", position);
                             ErrorSelection(position - 1, rtb);
@@ -95,27 +88,19 @@ namespace лаба_компиляторы_1
 
                         break;
                     case 2:
-                        if (token == null)
+                        if (token == null || token.Item1 != 2)
                         {
-                            Error("Неполный ввод, проверьте наличие всех необходимых символов", position);
+                            Error("Ожидалось ключевое слово char", position);
                             ErrorSelection(position - 1, rtb);
                             countErrors++;
-                            return countErrors;
-                        }
+                        } else
                         if (token.Item1 == 3 && tokens[i + 1]!= null && tokens[i + 1]?.Item1 == 3)
                         {
                             Error("Ожидалось ключевое слово char", position);
                             ErrorSelection(position - 1, rtb);
                             countErrors++;
                             i++;
-                        }
-                        else
-                        if (token.Item1 != 2)
-                        {
-                            Error("Ожидалось ключевое слово char", position);
-                            ErrorSelection(position - 1, rtb);
-                            countErrors++;
-                        }
+                        }                        
                         else i++;
                         if (i < tokens.Count &&  tokens[i] != null && tokens[i].Item1 == 2)
                             while (tokens[i].Item1 == 2)
@@ -128,14 +113,7 @@ namespace лаба_компиляторы_1
                         state = 3;
                         break;
                     case 3:
-                        if (token == null)
-                        {
-                            Error("Неполный ввод, проверьте наличие всех необходимых символов", position);
-                            ErrorSelection(position - 1, rtb);
-                            countErrors++;
-                            return countErrors;
-                        }
-                        if (token.Item1 != 3)
+                        if (token == null || token.Item1 != 3)
                         {
                             Error("Ожидался идентификатор", position);
                             ErrorSelection(position - 1, rtb);
@@ -156,25 +134,18 @@ namespace лаба_компиляторы_1
                         state = 4;
                         break;
                     case 4:
-                        if (token == null)
+                        if (token == null || token.Item1 != 5)
                         {
-                            Error("Неполный ввод, проверьте наличие всех необходимых символов", position);
+                            Error("Пропущена [", position);
                             ErrorSelection(position - 1, rtb);
                             countErrors++;
-                            return countErrors;
-                        }
+                        } else
                         if (token.Item1 != 5 && token.Item1 != 6 && token.Item1 != 9)
                         {
                             Error("Неожиданный символ, проверьте наличие [", position);
                             ErrorSelection(position - 1, rtb);
                             countErrors++;
                             i++;
-                        }
-                        else if (token.Item1 != 5)
-                        {
-                            Error("Пропущена [", position);
-                            ErrorSelection(position - 1, rtb);
-                            countErrors++;
                         }
                         else i++;
                         if (i < tokens.Count && tokens[i] != null && tokens[i].Item1 == 5)
@@ -188,26 +159,19 @@ namespace лаба_компиляторы_1
                         state = 5;
                         break;
                     case 5:
-                        if (token == null)
+                        if (token == null || (token.Item1 != 6 && token.Item1 != 9))
                         {
-                            Error("Неполный ввод, проверьте наличие всех необходимых символов", position);
+                            Error("Пропущено число или ] ", position);
                             ErrorSelection(position - 1, rtb);
+                            state = 7;
                             countErrors++;
-                            return countErrors;
-                        }
+                        } else
                         if (token.Item1 != 6 && token.Item1 != 9 && token.Item1 != 7)
                         {
                             Error("Пропущено число или ] ", position);
                             ErrorSelection(position - 1, rtb);
                             countErrors++;
                             i++;
-                        }
-                        else if ((token.Item1 != 6 && token.Item1 != 9))
-                        {
-                            Error("Пропущено число или ] ", position);
-                            ErrorSelection(position - 1, rtb);
-                            state = 7;
-                            countErrors++;
                         }
                         else if (token.Item1 == 9)
                         {
@@ -229,25 +193,18 @@ namespace лаба_компиляторы_1
                         }
                         break;
                     case 6:
-                        if (token == null)
+                        if (token == null || token.Item1 != 6)
                         {
-                            Error("Неполный ввод, проверьте наличие всех необходимых символов", position);
+                            Error("Пропущена ]", position);
                             ErrorSelection(position - 1, rtb);
                             countErrors++;
-                            return countErrors;
-                        }
+                        } else
                         if (token.Item1 != 6 && token.Item1 != 7)
                         {
                             Error("Пропущена ]", position);
                             ErrorSelection(position - 1, rtb);
                             countErrors++;
                             i++;
-                        }
-                        else if (token.Item1 != 6)
-                        {
-                            Error("Пропущена ]", position);
-                            ErrorSelection(position - 1, rtb);
-                            countErrors++;
                         }
                         else i++;
                         if (i < tokens.Count && tokens[i] != null && tokens[i].Item1 == 6)
@@ -261,13 +218,12 @@ namespace лаба_компиляторы_1
                         state = 7;
                         break;
                     case 7:
-                        if (token == null)
+                        if (token == null || token.Item1 != 7)
                         {
-                            Error("Неполный ввод, проверьте наличие всех необходимых символов", position);
+                            Error("Ожидался знак = ", position);
                             ErrorSelection(position - 1, rtb);
                             countErrors++;
-                            return countErrors;
-                        }
+                        } else
                         if (token.Item1 != 7 && token.Item1 != 8)
                         {
                             Error("Ожидался знак = ", position);
@@ -275,12 +231,7 @@ namespace лаба_компиляторы_1
                             countErrors++;
                             i++;
                         }
-                        else if (token.Item1 != 7)
-                        {
-                            Error("Ожидался знак = ", position);
-                            ErrorSelection(position - 1, rtb);
-                            countErrors++;
-                        }
+                       
                         else i++;
                         if (i < tokens.Count && tokens[i] != null && tokens[i].Item1 == 7)
                             while (tokens[i].Item1 == 7)
@@ -293,13 +244,12 @@ namespace лаба_компиляторы_1
                         state = 8;
                         break;
                     case 8:
-                        if (token == null)
+                        if (token == null || token.Item1 != 8)
                         {
-                            Error("Неполный ввод, проверьте наличие всех необходимых символов", position);
+                            Error("Ожидалась строка", position);
                             ErrorSelection(position - 1, rtb);
                             countErrors++;
-                            return countErrors;
-                        }
+                        } else
                         if (token.Item1 != 8 && token.Item1 != 10)
                         {
                             Error("Ожидалась строка", position);
@@ -307,12 +257,7 @@ namespace лаба_компиляторы_1
                             countErrors++;
                             i++;
                         }
-                        else if (token.Item1 != 8)
-                        {
-                            Error("Ожидалась строка", position);
-                            ErrorSelection(position - 1, rtb);
-                            countErrors++;
-                        }
+                        
                         else i++;
                         if (i < tokens.Count && tokens[i] != null && tokens[i].Item1 == 8)
                             while (tokens[i].Item1 == 8)
@@ -325,14 +270,16 @@ namespace лаба_компиляторы_1
                         state = 9;
                         break;
                     case 9:
-                        if (token == null)
+                        if (token == null || token.Item1 != 10)
                         {
                             Error("Ожидался символ ;", position);
                             ErrorSelection(position - 1, rtb);
                             countErrors++;
-                            return countErrors;
-                        }
-                        else if (token.Item1 != 10 && token.Item1 != 1)
+                            if (token != null && i + 1 < tokens.Count) state = 1;
+                            else
+                                return countErrors;
+                        } else
+                        if (token.Item1 != 10 && token.Item1 != 1)
                         {
                             Error("Ожидался символ ;", position);
                             ErrorSelection(position - 1, rtb);
@@ -344,13 +291,6 @@ namespace лаба_компиляторы_1
                                 i++;
                             }
                             return countErrors;
-                        }
-                        else if (token.Item1 != 10)
-                        {
-                            Error("Ожидался символ ;", position);
-                            ErrorSelection(position - 1, rtb);
-                            countErrors++;
-                            if (i + 1 < tokens.Count) state = 1;
                         }
                         else if (i + 1 < tokens.Count)
                         {
