@@ -37,11 +37,6 @@ namespace лаба_компиляторы_1
 
         public void Analyze(string text, RichTextBox rtb, DataGridView dataGrid)
         {
-            //string[] rows = text.Split('\n');
-
-            //for (int i = 0; i < rows.Length; i++)
-            //{
-            //string row = rows[i];
             string row = text;
             int index = 0;
             bool lastWasKeyword = false;
@@ -63,30 +58,14 @@ namespace лаба_компиляторы_1
 
                 if (current >= 'А' && current <= 'Я' || current >= 'а' && current <= 'я')
                 {
-                    //int start = index;
-                    //while (index < row.Length && (((row[index] >= 'А' && row[index] <= 'Я') ||
-                    //      (row[index] >= 'а' && row[index] <= 'я'))))
-                    //    index++;
-
-                    //string word = row.Substring(start, index - start);
-
-                    //dataGridView1.Rows.Add("ERROR", "недопустимый фрагмент", word, $"{i + 1} строка, {start + 1} символ");
                     dataGrid.Rows.Add("ERROR", "недопустимый символ", current, $"{index + 1} символ");
-
                     ErrorSelection(index, rtb);
-
                     break;
-
-                    //continue;
                 }
-                //index++;
                 if (char.IsLetter(current))
                 {
                     int start = index;
                     bool error = false;
-                    //((row[index] >= 'A' && row[index] <= 'Z') ||
-                    //      (row[index] >= 'a' && row[index] <= 'z') ||
-                    //      (row[index] >= '0' && row[index] <= '9'))
                     while (index < row.Length && (char.IsDigit(row[index]) | char.IsLetter(row[index])))
                     {
                         if (row[index] >= 'А' && row[index] <= 'Я' || row[index] >= 'а' && row[index] <= 'я')
@@ -111,16 +90,13 @@ namespace лаба_компиляторы_1
                     {
                         case "const":
                             dataGrid.Rows.Add("1", "ключевое слово", "const", location);
-                            //parcer.dictionary.Add(1, "const");
                             lastWasKeyword = true;
                             break;
                         case "char":
-                            //parcer.dictionary.Add(2, "char");
                             dataGrid.Rows.Add("2", "ключевое слово", "char", location);
                             lastWasKeyword = true;
                             break;
                         default:
-                            //parcer.dictionary.Add(3, word);
                             dataGrid.Rows.Add("3", "идентификатор", word, location);
                             break;
                     }
@@ -135,7 +111,6 @@ namespace лаба_компиляторы_1
 
                     string number = row.Substring(start, index - start);
                     string location = $"{LocationDetection(number, row, start)}";
-                    //parcer.dictionary.Add(3, word);
                     dataGrid.Rows.Add("9", "целое без знака", number, location);
                     continue;
                 }
@@ -190,7 +165,6 @@ namespace лаба_компиляторы_1
                 }
                 index++;
             }
-            //}
         }
     }
 }
