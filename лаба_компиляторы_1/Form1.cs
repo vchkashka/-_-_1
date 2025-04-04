@@ -524,6 +524,21 @@ namespace лаба_компиляторы_1
             }
         }
 
+        private void ClearErrorSelection(RichTextBox rtb)
+        {
+            //isTextChangedByUndoRedo = true;
+            rtb.SuspendLayout();
+            int selectionStart = rtb.SelectionStart;
+            int selectionLength = rtb.SelectionLength;
+
+            rtb.SelectAll();
+            rtb.SelectionBackColor = Color.White;
+
+            rtb.SelectionStart = selectionStart;
+            rtb.SelectionLength = selectionLength;
+            rtb.ResumeLayout();
+        }
+
         private void toolStripButton13_Click(object sender, EventArgs e)
         {
             dataGridView1.Rows.Clear();
@@ -533,7 +548,7 @@ namespace лаба_компиляторы_1
                 {
                     if (control is RichTextBox rtb)
                     {
-
+                        ClearErrorSelection(rtb);
                         HighlightSyntax(rtb);
                         //parcer.Analyze(rtb.Text, dataGridView1);
                         lexer.Analyze(rtb.Text, rtb, dataGridView1);
@@ -551,7 +566,7 @@ namespace лаба_компиляторы_1
                 {
                     if (control is RichTextBox rtb)
                     {
-
+                        ClearErrorSelection(rtb);
                         HighlightSyntax(rtb);
                         //parcer.Analyze(rtb.Text, dataGridView1);
                         lexer.Analyze(rtb.Text, rtb, dataGridView1);
