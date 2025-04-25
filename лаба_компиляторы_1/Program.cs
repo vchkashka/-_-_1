@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -137,9 +138,6 @@ namespace лаба_компиляторы_1
 
     internal static class Program
     {
-        /// <summary>
-        /// Главная точка входа для приложения.
-        /// </summary>
         [STAThread]
         static void Main()
         {
@@ -151,9 +149,33 @@ namespace лаба_компиляторы_1
             Thread.CurrentThread.CurrentCulture = newCulture;
             Thread.CurrentThread.CurrentUICulture = newCulture;
 
+            AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
+            {
+                var requestedAssembly = new AssemblyName(args.Name);
+
+                if (requestedAssembly.Name.EndsWith(".resources"))
+                {
+                    var currentAssembly = Assembly.GetExecutingAssembly();
+                    var resourceName = requestedAssembly.Name + ".dll";
+
+                    using (var stream = currentAssembly.GetManifestResourceStream(resourceName))
+                    {
+                        if (stream != null)
+                        {
+                            byte[] assemblyData = new byte[stream.Length];
+                            stream.Read(assemblyData, 0, assemblyData.Length);
+                            return Assembly.Load(assemblyData);
+                        }
+                    }
+                }
+
+                return null;
+            };
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
         }
     }
+
 }

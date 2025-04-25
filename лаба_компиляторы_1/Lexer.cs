@@ -23,9 +23,6 @@ namespace лаба_компиляторы_1
             int selectionStart = rtb.SelectionStart;
             int selectionLength = rtb.SelectionLength;
 
-            rtb.SelectAll();
-            rtb.SelectionBackColor = rtb.BackColor;
-
             rtb.Select(index, 1);
             rtb.SelectionBackColor = Color.Red;
 
@@ -56,34 +53,41 @@ namespace лаба_компиляторы_1
                     continue;
                 }
 
-                if (current >= 'А' && current <= 'Я' || current >= 'а' && current <= 'я')
-                {
-                    dataGrid.Rows.Add("ERROR", "недопустимый символ", current, $"{index + 1} символ");
-                    ErrorSelection(index, rtb);
-                    break;
-                }
-                if (char.IsLetter(current))
+                //if (current >= 'А' && current <= 'Я' || current >= 'а' && current <= 'я')
+                //{
+                //    dataGrid.Rows.Add("ERROR", "недопустимый символ", current, $"{index + 1} символ");
+                //    ErrorSelection(index, rtb);
+                //    index++;
+                //    while (row[index] >= 'А' && row[index] <= 'Я' || row[index] >= 'а' && row[index] <= 'я')
+                //    {
+                //        index++;
+                //    }
+                //    continue;
+                //}
+                if (char.IsLetter(current) && ((row[index] >= 'A' && row[index] <= 'Z') || (row[index] >= 'a' && row[index] <= 'z')))
                 {
                     int start = index;
+                    int end = 0;
                     bool error = false;
-                    while (index < row.Length && (char.IsDigit(row[index]) | char.IsLetter(row[index])))
+                    int errorIndex = 0;
+                    while (index < row.Length && (char.IsDigit(row[index]) || char.IsLetter(row[index])))
                     {
-                        if (row[index] >= 'А' && row[index] <= 'Я' || row[index] >= 'а' && row[index] <= 'я')
+                        if (!((row[index] >= 'A' && row[index] <= 'Z') || (row[index] >= 'a' && row[index] <= 'z') || char.IsDigit(row[index])))
                         {
-                           error = true;
-                           break;
+                            end = index;
+                            error = true;
+                            errorIndex = index;
+                            while (!((row[index] >= 'A' && row[index] <= 'Z') || (row[index] >= 'a' && row[index] <= 'z') || char.IsDigit(row[index])))
+                            {
+                                index++;
+                            }
                         }
                         index++;
                     }
 
-                    if (error == true)
-                    {
-                        dataGrid.Rows.Add("ERROR", "недопустимый символ", row[index], $"{index + 1} символ");
-                        ErrorSelection(index, rtb);
-                        break;
-                    }
+                    if (error == false) end = index;
 
-                    string word = row.Substring(start, index - start);
+                    string word = row.Substring(start, end - start);
                     string location = $"{LocationDetection(word, row, start)}";
 
                     switch (word)
@@ -100,6 +104,12 @@ namespace лаба_компиляторы_1
                             dataGrid.Rows.Add("3", "идентификатор", word, location);
                             break;
                     }
+
+                    if (error == true)
+                    {
+                        dataGrid.Rows.Add("ERROR", "недопустимый символ", row[errorIndex], $"{errorIndex + 1} символ");
+                        ErrorSelection(errorIndex, rtb);
+                    }
                     continue;
                 }
 
@@ -108,7 +118,7 @@ namespace лаба_компиляторы_1
                     int start = index;
                     while (index < row.Length && char.IsDigit(row[index]))
                         index++;
-
+                     
                     string number = row.Substring(start, index - start);
                     string location = $"{LocationDetection(number, row, start)}";
                     dataGrid.Rows.Add("9", "целое без знака", number, location);
@@ -131,37 +141,42 @@ namespace лаба_компиляторы_1
                         break;
                     case '"':
                         int start = index;
-                        bool closingBracket = false;
+                        //bool closingBracket = false;
                         index++;
 
                         while (index < row.Length)
                         {
                             if (row[index] == '"')
                             {
-                                closingBracket = true;
+                                //closingBracket = true;
                                 break;
                             }
                             index++;
                         }
 
-                        if (index < row.Length && closingBracket == true)
+                        if (index <= row.Length)
                         {
-                            index++;
+                            if (index < row.Length) index++;
                             string strValue = row.Substring(start, index - start);
                             string location = $"{LocationDetection(strValue, row, start)}";
                             dataGrid.Rows.Add("8", "строка", strValue, location);
                         }
-                        else if (closingBracket == false)
-                        {
-                            ErrorSelection(start, rtb);
-                            dataGrid.Rows.Add("ERROR", "недопустимый символ", row.Substring(start, 1), $"{start + 1}");
-                            break;
-                        }
+                        //else if (closingBracket == false)
+                        //{
+                        //    ErrorSelection(start, rtb);
+                        //    dataGrid.Rows.Add("ERROR", "недопустимый символ", row.Substring(start, 1), $"{start + 1}");
+                        //    break;
+                        //}
                         continue;
                     default:
                         ErrorSelection(index, rtb);
                         dataGrid.Rows.Add("ERROR", "недопустимый символ", current.ToString(), $"{index + 1}");
-                        return;
+                        index++;
+                        while (row[index] != ' ' && row[index] != '[' && row[index] != ']' && row[index] != '"' && row[index] != ';')
+                        {
+                            index++;
+                        }
+                        continue;
                 }
                 index++;
             }

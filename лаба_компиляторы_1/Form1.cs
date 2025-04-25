@@ -134,8 +134,8 @@ namespace лаба_компиляторы_1
                     if (tab.Controls.Count > 0 && tab.Controls[0] is RichTextBox rtb && rtb.Modified)
                     {
                         DialogResult result = DialogResult.None;
-                        if (toolStripMenuItem1.Text == "Английский язык")
-                            result = MessageBox.Show($"Вы хотите сохранить изменения в файле {tab.Text}?", "Внимание!", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                        if (Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName == "ru")
+                                result = MessageBox.Show($"Вы хотите сохранить изменения в файле {tab.Text}?", "Внимание!", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                         else
                             result = MessageBox.Show($"Do you want to save the changes to the {tab.Text} file?", "Warning!", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
 
@@ -163,8 +163,8 @@ namespace лаба_компиляторы_1
                     if (rtb.Modified)
                     {
                         DialogResult result = DialogResult.None;
-                        if (toolStripMenuItem1.Text == "Английский язык")
-                            result = MessageBox.Show($"Вы хотите сохранить изменения в файле {tab.Text}?", "Внимание!", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                        if (Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName == "ru")
+                                result = MessageBox.Show($"Вы хотите сохранить изменения в файле {tab.Text}?", "Внимание!", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                         else
                             result = MessageBox.Show($"Do you want to save the changes to the {tab.Text} file?", "Warning!", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
 
@@ -189,7 +189,7 @@ namespace лаба_компиляторы_1
                     else
                     {
                         DialogResult result = DialogResult.None;
-                        if (toolStripMenuItem1.Text == "Английский язык")
+                        if (Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName == "ru")
                             result = MessageBox.Show($"Вы хотите закрыть файл {tab.Text}?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                         else
                             result = MessageBox.Show($"Do you want to close the {tab.Text} file?", "Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
@@ -435,12 +435,10 @@ namespace лаба_компиляторы_1
 
             Thread.CurrentThread.CurrentCulture = new CultureInfo(newCulture);
             Thread.CurrentThread.CurrentUICulture = new CultureInfo(newCulture);
-
             foreach (Form form in Application.OpenForms)
             {
                 AppSettings.UpdateFormLanguage(form);
             }
-
         }
 
         private void DrawLineNumbers(Graphics g, RichTextBox richTextBox, PictureBox lineNumberBox)

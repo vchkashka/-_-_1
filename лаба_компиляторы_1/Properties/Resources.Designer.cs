@@ -91,6 +91,30 @@ namespace лаба_компиляторы_1.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на &lt;html&gt;
+        ///&lt;head&gt;
+        ///    &lt;meta charset=&quot;UTF-8&quot;&gt;
+        ///    &lt;title&gt;User Guide&lt;/title&gt;
+        ///&lt;/head&gt;
+        ///&lt;body bgcolor=&quot;white&quot; text=&quot;black&quot;&gt;
+        ///    &lt;h2 align=&quot;center&quot;&gt;User Guide for the &quot;Compiler&quot; Application&lt;/h2&gt;
+        ///    
+        ///    &lt;h3 align=&quot;left&quot;&gt;Table of Contents&lt;/h3&gt;
+        ///    &lt;ol&gt;
+        ///        &lt;li&gt;&lt;a href=&quot;#functions&quot;&gt;Application Functions&lt;/a&gt;&lt;/li&gt;
+        ///        &lt;li&gt;&lt;a href=&quot;#menu&quot;&gt;Description of Main Menu Items&lt;/a&gt;
+        ///            &lt;ol&gt;
+        ///                &lt;a href=&quot;#file&quot;&gt;&lt;li&gt;File&lt;/li&gt;&lt;/a&gt;
+        ///                &lt;a href=&quot;#edit&quot;&gt;&lt;li&gt;Edit&lt;/li&gt;&lt;/a&gt;
+        ///           [остаток строки не уместился]&quot;;.
+        /// </summary>
+        internal static string en {
+            get {
+                return ResourceManager.GetString("en", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap folder_open_icon_173134 {
@@ -106,16 +130,6 @@ namespace лаба_компиляторы_1.Properties {
         internal static System.Drawing.Bitmap Help_icon_icons_com_55891 {
             get {
                 object obj = ResourceManager.GetObject("Help_icon-icons.com_55891", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap info_3525 {
-            get {
-                object obj = ResourceManager.GetObject("info_3525", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -151,21 +165,34 @@ namespace лаба_компиляторы_1.Properties {
         }
         
         /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        ///   Ищет локализованную строку, похожую на &lt;html&gt;
+        ///&lt;head&gt;
+        ///    &lt;meta charset=&quot;UTF-8&quot;&gt;
+        ///    &lt;title&gt;Руководство пользователя&lt;/title&gt;
+        ///&lt;/head&gt;
+        ///&lt;body bgcolor=&quot;white&quot; text=&quot;black&quot;&gt;
+        ///    &lt;h2 align=&quot;center&quot;&gt;Руководство пользователя к приложению &quot;Компилятор&quot;&lt;/h2&gt;
+        ///    
+        ///    &lt;h3 align=&quot;left&quot;&gt;Содержание&lt;/h3&gt;
+        ///    &lt;ol&gt;
+        ///        &lt;li&gt;&lt;a href=&quot;#functions&quot;&gt;Функции приложения&lt;/a&gt;&lt;/li&gt;
+        ///        &lt;li&gt;&lt;a href=&quot;#menu&quot;&gt;Описание основных пунктов меню&lt;/a&gt;
+        ///            &lt;ol&gt;
+        ///                &lt;a href=&quot;#file&quot;&gt;&lt;li&gt;Файл&lt;/li&gt;&lt;/a&gt;
+        ///                &lt;a href=&quot;#edit&quot;&gt;&lt;li&gt;Правка&lt;/li&gt;&lt; [остаток строки не уместился]&quot;;.
         /// </summary>
-        internal static System.Drawing.Bitmap save_icon_125167 {
+        internal static string ru {
             get {
-                object obj = ResourceManager.GetObject("save_icon_125167", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ResourceManager.GetString("ru", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap saveas_5165 {
+        internal static System.Drawing.Bitmap save_icon_125167 {
             get {
-                object obj = ResourceManager.GetObject("saveas_5165", resourceCulture);
+                object obj = ResourceManager.GetObject("save_icon_125167", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -183,39 +210,9 @@ namespace лаба_компиляторы_1.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap start_play_icon_132803 {
-            get {
-                object obj = ResourceManager.GetObject("start_play_icon_132803", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap undo_black_arrow_pointing_to_left_icon_icons_com_56880 {
             get {
                 object obj = ResourceManager.GetObject("undo-black-arrow-pointing-to-left_icon-icons.com_56880", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap добавить {
-            get {
-                object obj = ResourceManager.GetObject("добавить", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap добавить1 {
-            get {
-                object obj = ResourceManager.GetObject("добавить1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

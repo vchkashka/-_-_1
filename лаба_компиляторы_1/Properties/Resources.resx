@@ -121,20 +121,11 @@
   <data name="edit_cut_icon_124981" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\edit_cut_icon_124981.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="start_play_icon_132803" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\start_play_icon_132803.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="redo-arrow-1_icon-icons.com_56892" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\redo-arrow-1_icon-icons.com_56892.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Help_icon-icons.com_55891" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\Help_icon-icons.com_55891.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="добавить" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\добавить.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="добавить1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\добавить.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="add_circle_create_expand_new_plus_icon_123218" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\add_circle_create_expand_new_plus_icon_123218.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -142,17 +133,11 @@
   <data name="folder_open_icon_173134" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\folder_open_icon_173134.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="info_3525" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\info_3525.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="undo-black-arrow-pointing-to-left_icon-icons.com_56880" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\undo-black-arrow-pointing-to-left_icon-icons.com_56880.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="start-button_icon-icons.com_53873" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\start-button_icon-icons.com_53873.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="saveas_5165" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\saveas_5165.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="copy-file_icon-icons.com_56095" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\copy-file_icon-icons.com_56095.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -165,5 +150,11 @@
   </data>
   <data name="info_information_icon_178159" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\info_information_icon_178159.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="en" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\en.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+  </data>
+  <data name="ru" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\ru.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
 </root>
