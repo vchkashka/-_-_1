@@ -15,7 +15,7 @@ namespace лаба_компиляторы_1
         private Stack<string> undoStack = new Stack<string>();
         private Stack<string> redoStack = new Stack<string>();
         private bool isTextChangedByUndoRedo = false;
-        Lexer lexer = new Lexer();
+        //Lexer lexer = new Lexer();
 
         public Form1()
         {
@@ -573,19 +573,30 @@ namespace лаба_компиляторы_1
 
                         ClearErrorSelection(rtb);
                         HighlightSyntax(rtb);
-                        int countErrors = lexer.Analyze(rtb.Text, rtb, dataGridView1);
-                        if (countErrors > 0)
+                        try
                         {
-                            tabControl2.TabPages[0].Text = $"Обнаружено ошибок: {countErrors}";
-                            dataGridView1.Show();
-                            label1.Hide();
+                            var parcer = new Parcer(rtb.Text, dataGridView1, rtb);
+                            parcer.Parse();
+                            int countErrors = parcer.CountErrors;//lexer.Analyze(rtb.Text, rtb, dataGridView1);
+                            if (countErrors > 0)
+                            {
+                                tabControl2.TabPages[0].Text = $"Обнаружено ошибок: {countErrors}";
+                                dataGridView1.Show();
+                                label1.Hide();
+                            }
+                            else
+                            {
+                                tabControl2.TabPages[0].Text = "Результат";
+                                dataGridView1.Hide();
+                                label1.Text = "ПОЛИЗ: " + parcer.GetPOLIZ() + "\nРезультат вычислений: " + parcer.EvaluatePOLIZ();
+                                label1.Show();
+                            }
                         }
-                        else
+                        catch (Exception ex)
                         {
-                            tabControl2.TabPages[0].Text = "Результат";
-                            dataGridView1.Hide();
-                            label1.Show();
+                            Console.WriteLine(ex.Message);
                         }
+                   
                     }
                 }
             }
@@ -608,18 +619,29 @@ namespace лаба_компиляторы_1
 
                         ClearErrorSelection(rtb);
                         HighlightSyntax(rtb);
-                        int countErrors = lexer.Analyze(rtb.Text, rtb, dataGridView1);
-                        if (countErrors > 0)
+                        try
                         {
-                            tabControl2.TabPages[0].Text = $"Обнаружено ошибок: {countErrors}";
-                            dataGridView1.Show();
-                            label1.Hide();
+                            var parcer = new Parcer(rtb.Text, dataGridView1, rtb);
+                            parcer.Parse();
+                            int countErrors = parcer.CountErrors;//lexer.Analyze(rtb.Text, rtb, dataGridView1);
+                            if (countErrors > 0)
+                            {
+                                tabControl2.TabPages[0].Text = $"Обнаружено ошибок: {countErrors}";
+                                dataGridView1.Show();
+                                label1.Hide();
+                            }
+                            else
+                            {
+                                tabControl2.TabPages[0].Text = "Результат";
+                                dataGridView1.Hide();
+                                label1.Text = "ПОЛИЗ: " + parcer.GetPOLIZ() + "\nРезультат вычислений: " + parcer.EvaluatePOLIZ();
+                                label1.Show();
+                            }
+
                         }
-                        else
+                        catch (Exception ex)
                         {
-                            tabControl2.TabPages[0].Text = "Результат";
-                            dataGridView1.Hide();
-                            label1.Show();
+                            Console.WriteLine(ex.Message);
                         }
                     }
                 }
