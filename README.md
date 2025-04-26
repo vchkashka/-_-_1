@@ -22,30 +22,30 @@
 - 60/10
 
  ## Тестовые примеры
- На рисунках 2-5 представлены тестовые примеры запуска разработанного компилятора.
+ На рисунках 1-5 представлены тестовые примеры запуска разработанного компилятора.
  ![image](https://github.com/user-attachments/assets/99e88958-94b2-4448-949c-59cb66a34438)
-
 Рисунок 1 - Тестовый пример 1
 
 
-![image](https://github.com/user-attachments/assets/e3e52634-fb9a-494d-aad1-96a0ac659306)
 
+![image](https://github.com/user-attachments/assets/e3e52634-fb9a-494d-aad1-96a0ac659306)
 Рисунок 2 - Тестовый пример 2
 
 
-![image](https://github.com/user-attachments/assets/cb0cb68a-773a-4844-8d2c-c200a1da3e9b)
 
+![image](https://github.com/user-attachments/assets/cb0cb68a-773a-4844-8d2c-c200a1da3e9b)
 Рисунок 3 - Тестовый пример 3
 
 
-![image](https://github.com/user-attachments/assets/818e0758-5419-4464-b1c5-234cc8289744)
 
+![image](https://github.com/user-attachments/assets/818e0758-5419-4464-b1c5-234cc8289744)
 Рисунок 4 - Тестовый пример 4
 
 
-![image](https://github.com/user-attachments/assets/21b7246d-e64a-46a5-ac19-2c9147907b00)
 
+![image](https://github.com/user-attachments/assets/21b7246d-e64a-46a5-ac19-2c9147907b00)
 Рисунок 5 - Тестовый пример 5
+
 
 
 ## Установка
