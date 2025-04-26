@@ -103,14 +103,12 @@ namespace лаба_компиляторы_1
             }
         }
 
-        // E → T A
         void E()
         {
             T();
             A();
         }
 
-        // A → ε | + T A | - T A
         void A()
         {
             if (currentToken == "+" || currentToken == "-")
@@ -121,17 +119,14 @@ namespace лаба_компиляторы_1
                 poliz.Add(op);
                 A();
             }
-            // else ε (ничего не делаем)
         }
 
-        // T → O B
         void T()
         {
             O();
             B();
         }
 
-        // B → ε | * O B | / O B
         void B()
         {
             if (currentToken == "*" || currentToken == "/")
@@ -142,16 +137,14 @@ namespace лаба_компиляторы_1
                 poliz.Add(op);
                 B();
             }
-            // else ε
         }
 
-        // O → num | ( E )
         void O()
         {
             if (IsNumber(currentToken))
             {
                 poliz.Add(currentToken);
-                Match(currentToken); // число
+                Match(currentToken);
             }
             else if (currentToken == "(")
             {
@@ -183,7 +176,7 @@ namespace лаба_компиляторы_1
 
             foreach (string token in poliz)
             {
-                if (Regex.IsMatch(token, @"^\d+$")) // число
+                if (Regex.IsMatch(token, @"^\d+$"))
                 {
                     stack.Push(double.Parse(token));
                 }

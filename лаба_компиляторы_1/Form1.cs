@@ -577,7 +577,7 @@ namespace лаба_компиляторы_1
                         {
                             var parcer = new Parcer(rtb.Text, dataGridView1, rtb);
                             parcer.Parse();
-                            int countErrors = parcer.CountErrors;//lexer.Analyze(rtb.Text, rtb, dataGridView1);
+                            int countErrors = parcer.CountErrors;
                             if (countErrors > 0)
                             {
                                 tabControl2.TabPages[0].Text = $"Обнаружено ошибок: {countErrors}";
@@ -594,7 +594,7 @@ namespace лаба_компиляторы_1
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine(ex.Message);
+                            MessageBox.Show(AppSettings.ErrorMessage() + ex.Message, AppSettings.ErrorMessage(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                    
                     }
@@ -623,7 +623,7 @@ namespace лаба_компиляторы_1
                         {
                             var parcer = new Parcer(rtb.Text, dataGridView1, rtb);
                             parcer.Parse();
-                            int countErrors = parcer.CountErrors;//lexer.Analyze(rtb.Text, rtb, dataGridView1);
+                            int countErrors = parcer.CountErrors;
                             if (countErrors > 0)
                             {
                                 tabControl2.TabPages[0].Text = $"Обнаружено ошибок: {countErrors}";
@@ -641,7 +641,7 @@ namespace лаба_компиляторы_1
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine(ex.Message);
+                            MessageBox.Show(AppSettings.ErrorMessage() + ex.Message, AppSettings.ErrorMessage(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
