@@ -566,37 +566,20 @@ namespace лаба_компиляторы_1
             {
                 foreach (Control control in tab.Controls)
                 {
-                    if (control is RichTextBox rtb)
+                    if (control is RichTextBox rtb &&  rtb.Text!="")
                     {
-                        //isTextChangedByUndoRedo = true;
-                        //undoStack.Push(rtb.Text);
-
-                        ClearErrorSelection(rtb);
-                        HighlightSyntax(rtb);
-                        try
+                        if (listBox1.GetSelected(0))
                         {
-                            var parcer = new Parcer(rtb.Text, dataGridView1, rtb);
-                            parcer.Parse();
-                            int countErrors = parcer.CountErrors;
-                            if (countErrors > 0)
-                            {
-                                tabControl2.TabPages[0].Text = $"Обнаружено ошибок: {countErrors}";
-                                dataGridView1.Show();
-                                label1.Hide();
-                            }
-                            else
-                            {
-                                tabControl2.TabPages[0].Text = "Результат";
-                                dataGridView1.Hide();
-                                label1.Text = "ПОЛИЗ: " + parcer.GetPOLIZ() + "\nРезультат вычислений: " + parcer.EvaluatePOLIZ();
-                                label1.Show();
-                            }
+                            HighlightMatches("\\b[fF]\\w*");
                         }
-                        catch (Exception ex)
+                        else if (listBox1.GetSelected(1))
                         {
-                            MessageBox.Show(AppSettings.ErrorMessage() + ex.Message, AppSettings.ErrorMessage(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            HighlightMatches("\\b(?:[A-ZА-ЯЁ]\\.){2,}|\\b[A-ZА-ЯЁ]{2,}\\b");
                         }
-                   
+                        else if (listBox1.GetSelected(2))
+                        {
+                            HighlightMatches("\\b(?!BG|GB|NK|KN|TN|NT|ZZ)(?![DFIQUV])[A-CEGHJ-PR-TW-Z](?!O)[A-CEGHJ-NP-RTW-Z]\\d{6}[A-D]\\b\r\n");
+                        }
                     }
                 }
             }
@@ -611,42 +594,53 @@ namespace лаба_компиляторы_1
             {
                 foreach (Control control in tab.Controls)
                 {
-                    if (control is RichTextBox rtb)
+                    if (control is RichTextBox rtb && rtb.Text != "")
                     {
-                        //isTextChangedByUndoRedo = true;
-
-                        //undoStack.Push(rtb.Text);
-
-                        ClearErrorSelection(rtb);
-                        HighlightSyntax(rtb);
-                        try
+                        if (listBox1.GetSelected(0))
                         {
-                            var parcer = new Parcer(rtb.Text, dataGridView1, rtb);
-                            parcer.Parse();
-                            int countErrors = parcer.CountErrors;
-                            if (countErrors > 0)
-                            {
-                                tabControl2.TabPages[0].Text = $"Обнаружено ошибок: {countErrors}";
-                                dataGridView1.Show();
-                                label1.Hide();
-                            }
-                            else
-                            {
-                                tabControl2.TabPages[0].Text = "Результат";
-                                dataGridView1.Hide();
-                                label1.Text = "ПОЛИЗ: " + parcer.GetPOLIZ() + "\nРезультат вычислений: " + parcer.EvaluatePOLIZ();
-                                label1.Show();
-                            }
-
+                            HighlightMatches("\\b[fF]\\w*");
                         }
-                        catch (Exception ex)
+                        else if (listBox1.GetSelected(1))
                         {
-                            MessageBox.Show(AppSettings.ErrorMessage() + ex.Message, AppSettings.ErrorMessage(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            HighlightMatches("\\b(?:[A-ZА-ЯЁ]\\.){2,}|\\b[A-ZА-ЯЁ]{2,}\\b");
+                        }
+                        else if (listBox1.GetSelected(2))
+                        {
+                            HighlightMatches("\\b(?!BG|GB|NK|KN|TN|NT|ZZ)(?![DFIQUV])[A-CEGHJ-PR-TW-Z](?!O)[A-CEGHJ-NP-RTW-Z]\\d{6}[A-D]\\b\r\n");
                         }
                     }
                 }
             }
             isTextChangedByUndoRedo = false;
+        }
+        void HighlightMatches(string pattern)
+        {
+            foreach (TabPage tab in tabControl1.TabPages)
+            {
+                foreach (Control control in tab.Controls)
+                {
+                    if (control is RichTextBox rtb && rtb.Text != "")
+                    {
+                        ClearErrorSelection(rtb);
+                        string text = rtb.Text;
+                        Regex regex = new Regex(pattern);
+                        foreach (Match match in regex.Matches(text))
+                        {
+                            rtb.Select(match.Index, match.Length);
+                            rtb.SelectionBackColor = Color.Yellow;
+                            dataGridView1.Show();
+                            label1.Hide();
+                            dataGridView1.Rows.Add(match.Value, match.Index+1);
+                        }
+                        if (dataGridView1.Rows.Count == 1)
+                        {
+                            dataGridView1.Hide();
+                            label1.Show();
+                            label1.Text = "Соответствующие подстроки не найдены.";
+                        }
+                    }
+                }
+            }
         }
     }
 }
