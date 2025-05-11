@@ -568,17 +568,19 @@ namespace лаба_компиляторы_1
                 {
                     if (control is RichTextBox rtb &&  rtb.Text!="")
                     {
+                        ClearErrorSelection(rtb);
                         if (listBox1.GetSelected(0))
                         {
                             HighlightMatches("\\b[fF]\\w*");
                         }
                         else if (listBox1.GetSelected(1))
                         {
-                            HighlightMatches("\\b(?:[A-ZА-ЯЁ]\\.){2,}|\\b[A-ZА-ЯЁ]{2,}\\b");
+                            HighlightMatches("\\b[A-Z]{2,}\\b");
+                            HighlightMatches("\\b[А-ЯЁ]{2,}\\b");
                         }
                         else if (listBox1.GetSelected(2))
                         {
-                            HighlightMatches("\\b(?!BG|GB|NK|KN|TN|NT|ZZ)(?![DFIQUV])[A-CEGHJ-PR-TW-Z](?!O)[A-CEGHJ-NP-RTW-Z]\\d{6}[A-D]\\b\r\n");
+                            HighlightMatches("\\b(?!BG|GB|NK|KN|TN|NT|ZZ)(?![DFIQUV])[A-CEGHJ-PR-TW-Z](?!O)[A-CEGHJ-NP-RTW-Z]\\d{6}[A-D]\\b");
                         }
                     }
                 }
@@ -596,17 +598,19 @@ namespace лаба_компиляторы_1
                 {
                     if (control is RichTextBox rtb && rtb.Text != "")
                     {
+                        ClearErrorSelection(rtb);
                         if (listBox1.GetSelected(0))
                         {
                             HighlightMatches("\\b[fF]\\w*");
                         }
                         else if (listBox1.GetSelected(1))
                         {
-                            HighlightMatches("\\b(?:[A-ZА-ЯЁ]\\.){2,}|\\b[A-ZА-ЯЁ]{2,}\\b");
+                            HighlightMatches("\\b[A-Z]{2,}\\b");
+                            HighlightMatches("\\b[А-ЯЁ]{2,}\\b");
                         }
                         else if (listBox1.GetSelected(2))
                         {
-                            HighlightMatches("\\b(?!BG|GB|NK|KN|TN|NT|ZZ)(?![DFIQUV])[A-CEGHJ-PR-TW-Z](?!O)[A-CEGHJ-NP-RTW-Z]\\d{6}[A-D]\\b\r\n");
+                            HighlightMatches("\\b(?!BG|GB|NK|KN|TN|NT|ZZ)(?![DFIQUV])[A-CEGHJ-PR-TW-Z](?!O)[A-CEGHJ-NP-RTW-Z]\\d{6}[A-D]\\b");
                         }
                     }
                 }
@@ -621,7 +625,6 @@ namespace лаба_компиляторы_1
                 {
                     if (control is RichTextBox rtb && rtb.Text != "")
                     {
-                        ClearErrorSelection(rtb);
                         string text = rtb.Text;
                         Regex regex = new Regex(pattern);
                         foreach (Match match in regex.Matches(text))
