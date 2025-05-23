@@ -575,6 +575,14 @@ namespace лаба_компиляторы_1
                         HighlightSyntax(rtb);
                         try
                         {
+                            HighlightMatches("\\b[fF][a-zA-Z]*\\b");
+                        }
+                        else if (listBox1.GetSelected(1))
+                        {
+                            HighlightMatches("\\b[A-Z]{2,}\\b");
+                            HighlightMatches("\\b[А-ЯЁ]{2,}\\b");
+                        }
+                        else if (listBox1.GetSelected(2))
                             var parcer = new Parcer(rtb.Text, dataGridView1, rtb);
                             parcer.Parse();
                             int countErrors = parcer.CountErrors;
