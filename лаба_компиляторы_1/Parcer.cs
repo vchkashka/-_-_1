@@ -12,32 +12,21 @@ namespace лаба_компиляторы_1
     public class Parcer
     {
         private string input;
-        private int pos = 0;
-        private string currentToken;
-
-        private List<string> poliz = new List<string>();
-        public string GetPOLIZ() {
-            string result = "";
-            foreach (string pol in poliz) 
-            {
-                result += pol + " ";
-            }
-            return result;
-        }
+        private int pos;
 
         DataGridView data = new DataGridView();
         RichTextBox rtb = new RichTextBox();
 
         int countErrors;
 
-        public int CountErrors {  get { return countErrors; } }
+        public int CountErrors { get { return countErrors; } }
 
         public Parcer(string input, DataGridView data, RichTextBox rtb)
         {
             this.input = input.Replace(" ", "");
             this.data = data;
             this.rtb = rtb;
-            NextToken();
+            this.pos = 0;
         }
 
         private void ErrorSelection(int index, RichTextBox rtb)
@@ -56,151 +45,131 @@ namespace лаба_компиляторы_1
             rtb.ResumeLayout();
         }
 
-        void NextToken()
+        public void Parse()
         {
-            if (pos >= input.Length)
+            countErrors = 0;
+            pos = 0;
+
+            try
             {
-                currentToken = null;
+                Doc();
+                if (pos != input.Length)
+                {
+                    Error("Неожиданный символ", pos);
+                    ErrorSelection(pos+1, rtb);
+                    countErrors++;
+                }
+            }
+            catch (Exception ex)
+            {
+                Error(ex.Message, pos);
+                ErrorSelection(Math.Max(0, pos), rtb);
+                countErrors++;
+            }
+        }
+
+        private void Doc()
+        {
+            if (pos >= input.Length) return;
+            if (input.Substring(pos).StartsWith("</"))
+            {
                 return;
             }
 
-            if (char.IsDigit(input[pos]))
+            Element();
+            Doc();
+        }
+
+        private void Element()
+        {
+            int start = pos;
+
+            if (IsChar())
             {
-                int start = pos;
-                while (pos < input.Length && char.IsDigit(input[pos]))
-                    pos++;
-                currentToken = input.Substring(start, pos - start);
+                Text();
+                return;
             }
-            else
+
+            if (Match("<em>"))
             {
-                currentToken = input[pos].ToString();
+                Doc();
+                Require("</em>");
+                return;
+            }
+
+            if (Match("<p>"))
+            {
+                Doc();
+                Require("</p>");
+                return;
+            }
+
+            if (Match("<ol>"))
+            {
+                List();
+                Require("</ol>");
+                return;
+            }
+
+            throw new Exception("Ожидался элемент (Text | <em> | <p> | <ol>)");
+        }
+
+        private void List()
+        {
+            if (input.Substring(pos).StartsWith("<li>"))
+            {
+                ListItem();
+                List();
+            }
+        }
+
+        private void ListItem()
+        {
+            Require("<li>");
+            Text();
+            Require("</li>");
+        }
+
+        private void Text()
+        {
+            if (ParseChar())
+                Text();
+        }
+
+        private bool ParseChar()
+        {
+            if (pos < input.Length && char.IsLetter(input[pos]))
+            {
                 pos++;
+                return true;
             }
+            return false;
         }
 
-        void Match(string expected)
+        private bool Match(string token)
         {
-            if (currentToken == expected)
+            if (input.Substring(pos).StartsWith(token))
             {
-                NextToken();
+                pos += token.Length;
+                return true;
             }
-            else
-            {
-                Error($"Ожидалось '{expected}'", pos);
-                ErrorSelection(pos-1, rtb);
-                countErrors++;
-            }
+            return false;
         }
 
-        public void Parse()
+        private void Require(string token)
         {
-            E();
-            if (currentToken != null)
-            {
-                Error("Неожиданный символ", pos);
-                ErrorSelection(pos-1, rtb);
-                countErrors++;
-            }
+            if (!Match(token))
+                throw new Exception($"Ожидалось '{token}'");
         }
 
-        void E()
+        private bool IsChar()
         {
-            T();
-            A();
-        }
-
-        void A()
-        {
-            if (currentToken == "+" || currentToken == "-")
-            {
-                string op = currentToken;
-                Match(op);
-                T();
-                poliz.Add(op);
-                A();
-            }
-        }
-
-        void T()
-        {
-            O();
-            B();
-        }
-
-        void B()
-        {
-            if (currentToken == "*" || currentToken == "/")
-            {
-                string op = currentToken;
-                Match(op);
-                O();
-                poliz.Add(op);
-                B();
-            }
-        }
-
-        void O()
-        {
-            if (IsNumber(currentToken))
-            {
-                poliz.Add(currentToken);
-                Match(currentToken);
-            }
-            else if (currentToken == "(")
-            {
-                Match("(");
-                E();
-                Match(")");
-            }
-            else
-            {
-                Error($"Ожидалось число или (", pos);
-                ErrorSelection(pos-1, rtb);
-                countErrors++;
-            }
-        }
-
-        bool IsNumber(string token)
-        {
-            return token != null && Regex.IsMatch(token, @"^\d+$");
+            return pos < input.Length && char.IsLetter(input[pos]);
         }
 
         private void Error(string message, int place)
         {
             this.data.Rows.Add(message, place);
-        }
-
-        public double EvaluatePOLIZ()
-        {
-            Stack<double> stack = new Stack<double>();
-
-            foreach (string token in poliz)
-            {
-                if (Regex.IsMatch(token, @"^\d+$"))
-                {
-                    stack.Push(double.Parse(token));
-                }
-                else
-                {
-                    double b = stack.Pop();
-                    double a = stack.Pop();
-                    double result = 0;
-                    switch (token)
-                    {
-                        case "+":  result = a + b; break;
-                        case "-": result = a - b; break;
-                        case "*": result = a * b; break;
-                        case "/": result = a / b; break;
-                        default: throw new Exception($"Неизвестный оператор: {token}");
-                    };
-                    stack.Push(result);
-                }
-            }
-
-            if (stack.Count != 1)
-                throw new Exception("Ошибка вычисления ПОЛИЗ");
-
-            return stack.Pop();
         }
 
     }

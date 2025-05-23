@@ -36,6 +36,7 @@ namespace лаба_компиляторы_1
 
             fileManager = new Files(tabControl1, this);
 
+            label1.Text = "Ошибки не найдены";
             label1.Hide();
         }
 
@@ -589,7 +590,7 @@ namespace лаба_компиляторы_1
                             {
                                 tabControl2.TabPages[0].Text = "Результат";
                                 dataGridView1.Hide();
-                                label1.Text = "ПОЛИЗ: " + parcer.GetPOLIZ() + "\nРезультат вычислений: " + parcer.EvaluatePOLIZ();
+                                //label1.Text = "ПОЛИЗ: " + parcer.GetPOLIZ() + "\nРезультат вычислений: " + parcer.EvaluatePOLIZ();
                                 label1.Show();
                             }
 
@@ -635,7 +636,7 @@ namespace лаба_компиляторы_1
                             {
                                 tabControl2.TabPages[0].Text = "Результат";
                                 dataGridView1.Hide();
-                                label1.Text = "ПОЛИЗ: " + parcer.GetPOLIZ() + "\nРезультат вычислений: " + parcer.EvaluatePOLIZ();
+                               // label1.Text = "ПОЛИЗ: " + parcer.GetPOLIZ() + "\nРезультат вычислений: " + parcer.EvaluatePOLIZ();
                                 label1.Show();
                             }
 
