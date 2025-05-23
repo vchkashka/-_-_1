@@ -14,14 +14,9 @@
 - Возможность изменения размера шрифта;
 - Вывод ошибок.
 
-## Грамматика (Вариант 15)
-G[Doc]:  
-1. Doc -> λ | Element Doc  
-2. Element -> Text | <em> Doc </em> | <p> Doc </p> | <ol> List </ol>  
-3. List -> λ | ListItem List  
-4. ListItem -> <li> Text </li>  
-5. Text -> λ | Char Text  
-Char -> a  | b | c |  …  | z | A | B |  … | Z
+## Грамматика
+![image](https://github.com/user-attachments/assets/71de7a62-9719-4ae8-b98d-9fda0c4c1ad7)
+
 
 ## Язык  
 
