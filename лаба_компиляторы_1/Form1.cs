@@ -569,20 +569,13 @@ namespace лаба_компиляторы_1
                     if (control is RichTextBox rtb)
                     {
                         //isTextChangedByUndoRedo = true;
+
                         //undoStack.Push(rtb.Text);
 
                         ClearErrorSelection(rtb);
                         HighlightSyntax(rtb);
                         try
                         {
-                            HighlightMatches("\\b[fF][a-zA-Z]*\\b");
-                        }
-                        else if (listBox1.GetSelected(1))
-                        {
-                            HighlightMatches("\\b[A-Z]{2,}\\b");
-                            HighlightMatches("\\b[А-ЯЁ]{2,}\\b");
-                        }
-                        else if (listBox1.GetSelected(2))
                             var parcer = new Parcer(rtb.Text, dataGridView1, rtb);
                             parcer.Parse();
                             int countErrors = parcer.CountErrors;
@@ -599,12 +592,12 @@ namespace лаба_компиляторы_1
                                 label1.Text = "ПОЛИЗ: " + parcer.GetPOLIZ() + "\nРезультат вычислений: " + parcer.EvaluatePOLIZ();
                                 label1.Show();
                             }
+
                         }
                         catch (Exception ex)
                         {
                             MessageBox.Show(AppSettings.ErrorMessage() + ex.Message, AppSettings.ErrorMessage(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
-                   
                     }
                 }
             }
