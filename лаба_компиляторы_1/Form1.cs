@@ -571,7 +571,7 @@ namespace лаба_компиляторы_1
                         ClearErrorSelection(rtb);
                         if (listBox1.GetSelected(0))
                         {
-                            HighlightMatches("\\b[fF]\\w*");
+                            HighlightMatches("\\b[fF][a-zA-Z]*\\b");
                         }
                         else if (listBox1.GetSelected(1))
                         {
