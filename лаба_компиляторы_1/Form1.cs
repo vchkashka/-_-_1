@@ -36,7 +36,7 @@ namespace лаба_компиляторы_1
 
             fileManager = new Files(tabControl1, this);
 
-            label1.Text = "Ошибки не найдены";
+            richTextBox1.Hide();
             label1.Hide();
         }
 
@@ -584,14 +584,14 @@ namespace лаба_компиляторы_1
                             {
                                 tabControl2.TabPages[0].Text = $"Обнаружено ошибок: {countErrors}";
                                 dataGridView1.Show();
-                                label1.Hide();
+                                richTextBox1.Hide();
                             }
                             else
                             {
                                 tabControl2.TabPages[0].Text = "Результат";
                                 dataGridView1.Hide();
-                                //label1.Text = "ПОЛИЗ: " + parcer.GetPOLIZ() + "\nРезультат вычислений: " + parcer.EvaluatePOLIZ();
-                                label1.Show();
+                                richTextBox1.Text = $"Последовательность разбора: {parcer.Functions}";
+                                richTextBox1.Show();
                             }
 
                         }
@@ -630,14 +630,14 @@ namespace лаба_компиляторы_1
                             {
                                 tabControl2.TabPages[0].Text = $"Обнаружено ошибок: {countErrors}";
                                 dataGridView1.Show();
-                                label1.Hide();
+                                richTextBox1.Hide();
                             }
                             else
                             {
                                 tabControl2.TabPages[0].Text = "Результат";
                                 dataGridView1.Hide();
-                               // label1.Text = "ПОЛИЗ: " + parcer.GetPOLIZ() + "\nРезультат вычислений: " + parcer.EvaluatePOLIZ();
-                                label1.Show();
+                                richTextBox1.Text = $"Последовательность разбора: {parcer.Functions}";
+                                richTextBox1.Show();
                             }
 
                         }
@@ -649,6 +649,11 @@ namespace лаба_компиляторы_1
                 }
             }
             isTextChangedByUndoRedo = false;
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

@@ -9,6 +9,19 @@ using System.Windows.Forms;
 
 namespace лаба_компиляторы_1
 {
+    public class Token
+    {
+        public string Type { get; set; }
+        public string Value { get; set; }
+        public int Position { get; set; }
+
+        public Token(string type, string value, int position)
+        {
+            Type = type;
+            Value = value;
+            Position = position;
+        }
+    }
     public class Parcer
     {
         private string input;
@@ -17,9 +30,12 @@ namespace лаба_компиляторы_1
         DataGridView data = new DataGridView();
         RichTextBox rtb = new RichTextBox();
 
+        string functions;
+        string text;
         int countErrors;
 
         public int CountErrors { get { return countErrors; } }
+        public string Functions { get { return functions; } }
 
         public Parcer(string input, DataGridView data, RichTextBox rtb)
         {
@@ -27,6 +43,7 @@ namespace лаба_компиляторы_1
             this.data = data;
             this.rtb = rtb;
             this.pos = 0;
+            this.functions = "";
         }
 
         private void ErrorSelection(int index, RichTextBox rtb)
@@ -45,10 +62,59 @@ namespace лаба_компиляторы_1
             rtb.ResumeLayout();
         }
 
+        private List<Token> tokens;
+
+        private void Lex()
+        {
+            tokens = new List<Token>();
+            countErrors = 0;
+
+            int i = 0;
+            while (i < input.Length)
+            {
+                if (char.IsLetter(input[i]))
+                {
+                    tokens.Add(new Token("CHAR", input[i].ToString(), i));
+                    i++;
+                }
+                else if (input[i] == '<')
+                {
+                    int start = i;
+                    while (i < input.Length && input[i] != '>')
+                        i++;
+                    if (i < input.Length && input[i] == '>')
+                    {
+                        i++;
+                        string tag = input.Substring(start, i - start);
+                        tokens.Add(new Token("TAG", tag, start));
+                    }
+                    else
+                    {
+                        Error("Незавершённый тег", start);
+                        ErrorSelection(start, rtb);
+                        countErrors++;
+                        i++;
+                    }
+                }
+                else
+                {
+                    Error($"Недопустимый символ '{input[i]}'", i);
+                    ErrorSelection(i, rtb);
+                    countErrors++;
+                    i++;
+                }
+            }
+        }
+
         public void Parse()
         {
             countErrors = 0;
             pos = 0;
+
+            Lex();
+
+            if (countErrors > 0)
+                return; 
 
             try
             {
@@ -70,12 +136,31 @@ namespace лаба_компиляторы_1
 
         private void Doc()
         {
-            if (pos >= input.Length) return;
+            if (pos >= input.Length) 
+            {
+                if (functions.Length == 0)
+                {
+                    functions += " Doc - ε";
+                }
+                else functions += " - Doc- ε";
+
+                return; 
+            }
             if (input.Substring(pos).StartsWith("</"))
             {
+                if (functions.Length == 0)
+                {
+                    functions += " Doc - ε";
+                }
+                else functions += " - Doc - ε";
+
                 return;
             }
-
+            if (functions.Length == 0)
+            {
+                functions += " Doc";
+            }
+            else functions += " - Doc";
             Element();
             Doc();
         }
@@ -83,6 +168,7 @@ namespace лаба_компиляторы_1
         private void Element()
         {
             int start = pos;
+            functions += " - Element";
 
             if (IsChar())
             {
@@ -92,6 +178,7 @@ namespace лаба_компиляторы_1
 
             if (Match("<em>"))
             {
+                functions += " - <em>";
                 Doc();
                 Require("</em>");
                 return;
@@ -99,6 +186,7 @@ namespace лаба_компиляторы_1
 
             if (Match("<p>"))
             {
+                functions += " - <p>";
                 Doc();
                 Require("</p>");
                 return;
@@ -106,25 +194,32 @@ namespace лаба_компиляторы_1
 
             if (Match("<ol>"))
             {
+                functions += " - <ol>";
                 List();
                 Require("</ol>");
                 return;
             }
+            if (!Match("<em>") && !Match("<p>") && !Match("<ol>"))
+                functions += " - Text - ε";
 
             throw new Exception("Ожидался элемент (Text | <em> | <p> | <ol>)");
+
         }
 
         private void List()
         {
+            functions += " - List";
             if (input.Substring(pos).StartsWith("<li>"))
             {
                 ListItem();
                 List();
             }
+            else functions += " - ε";
         }
 
         private void ListItem()
         {
+            functions += " - ListItem";
             Require("<li>");
             Text();
             Require("</li>");
@@ -132,14 +227,17 @@ namespace лаба_компиляторы_1
 
         private void Text()
         {
+            functions += " - Text";
             if (ParseChar())
                 Text();
+            else functions += " - ε";
         }
 
         private bool ParseChar()
         {
             if (pos < input.Length && char.IsLetter(input[pos]))
             {
+                functions += " - Char";
                 pos++;
                 return true;
             }
@@ -160,6 +258,8 @@ namespace лаба_компиляторы_1
         {
             if (!Match(token))
                 throw new Exception($"Ожидалось '{token}'");
+            else
+                functions += " - " + token;
         }
 
         private bool IsChar()
