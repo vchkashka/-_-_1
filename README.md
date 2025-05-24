@@ -14,92 +14,34 @@
 - Возможность изменения размера шрифта;
 - Вывод ошибок.
 
-## Вариант 37
-Объявление массива символов с инициализацией строковой константой на языке С:
-const char str[] = "Hello World";
-
-## Постановка задачи
-Константы — это элементы данных, значения которых известны и не изменяются в процессе выполнения программы.
-В языке C для объявления массива символов с инициализацией строковой константой используется ключевое слово const.
-Формат записи:
-const char имя_массива[] = "значение";
-Примеры:
-1. Обычная строка - символьный массив: const char str[] = "Hello World";
-2. Строка с символами Unicode (UTF-8) поддерживает символы кириллицы или других алфавитов: const char greeting[] = "Привет, мир!";
-3. Объявление массива фиксированного размера: const char buffer[10] = "Example";
-
-## Примеры допустимых строк
-Согласно автоматной грамматике G[‹Def›] синтаксический анализатор (парсер) строковых констант будет считать верными следующие записи:
-- const char text123[] = "Sample";
-- const char _greeting[] = "Привет, мир!"
-- const char word[6] = "Hello";
-
- ## Диаграмма состояний сканера
-![Диаграмма](https://github.com/user-attachments/assets/0b7134dd-4fbe-4540-bcec-278398e83a18)
-
-Рисунок 1 - Диаграмма состояний сканера
-
-## Разработанная грамматика
-Определим грамматику объявления массива символов с инициализацией строковой константой на языке С G[‹Start›] в нотации Хомского с продукциями P:
-1.	‹Start› → ‘const’‹Space1›
-2.	‹Space1› → ‘ ’‹Char›
-3.	‹Char› → ‘char’‹Space2›
-4.	‹Space2› → ‘ ’‹Id›
-5.	‹Id› → ‹Letter›‹IdRem›
-6.	‹IdRem› → ‹Letter›‹IdRem›
-7.	‹IdRem› → ‹Digit›‹IdRem›
-8.	‹IdRem› → ‘[’‹Bracket›
-9.	‹Bracket› → ‘]’‹Equal›
-10.	‹Bracket› → ‹Digit›‹NumRem›
-11.	‹NumRem› → ‹Digit›‹NumRem›
-12.	‹NumRem› → ‘]’‹Equal›
-13.	‹Equal› → ‘=’‹Quote›
-14.	‹Quote› → ‘“’‹Str›
-15.	‹Str› → ‹Symbols›‹StrRem›
-16.	‹StrRem› → ‹Symbols›‹StrRem›
-17.	‹StrRem› → ‘”’‹End›
-18.	‹End› → ‘;’
--	‹Digit› → “0” | “1” | “2” | “3” | “4” | “5” | “6” | “7” | “8” | “9”
--	‹Letter› → “a” | “b” | “c” | ... | “z” | “A” | “B” | “C” | ... | “Z”
--	‹Symbols› → “a” | “b” | “c” | ... | “z” | “A” | “B” | “C” | ... | “Z”| “0” | “1” | “2” | “3” | “4” | “5” | “6” | “7” | “8” | “9”| “!” | “.” | “,” | “?” | “№” | “#” | “^” | “@” | “$”| “;” | “:” | “ ” | “%” | “&” | “*” | “(” | “)” | “-” | “=” | “+” | “/” | “<” | “>” | “~” | “`”| “[” | “]” | “{” | “}” | “\” | “|” | “_” | “’”
-
-Следуя введенному формальному определению грамматики, представим G[‹Start›] ее составляющими:
--	Z = ‹Start›;
--	VT = {a, b, c, ..., z, A, B, C, ..., Z, !, ., ,, ?, №, #, ^, @, $, ;, : , %, &, *, (, ), -, _, =, +, /, \, |, <, >, ~, `, [, ], {, }, ‘, 0, 1, 2, ..., 9, const, char};
--	VN = {‹Start›, ‹Space1›, ‹Char›, ‹Space2›, ‹Id›, ‹IdRem›, ‹Bracket›, ‹Equal›, ‹NumRem›, ‹Quote›, ‹Str›, ‹StrRem›, ‹End›}.
-
-## Классификация грамматики
-Согласно классификации Хомского, грамматика G[‹Start›] является автоматной.
-Все правила относятся к классу праворекурсивных продукций (A → aB | a | ε), следовательно, грамматика является полностью автоматной.
-
-## Граф конечного автомата
-![image](https://github.com/user-attachments/assets/0524efa8-1f52-44fa-abcf-cf37b9664537)
-
- ## Тестовые примеры
- На рисунках 2-5 представлены тестовые примеры запуска разработанного компилятора.
- 
-![image](https://github.com/user-attachments/assets/901eb941-73bf-4c6e-9c5a-6be1f066e143)
-
-Рисунок 2 - Тестовый пример 1
+## Грамматика
+![image](https://github.com/user-attachments/assets/71de7a62-9719-4ae8-b98d-9fda0c4c1ad7)
 
 
-![image](https://github.com/user-attachments/assets/0574a5aa-c11f-4d6b-aeb6-a8924fe5300b)
+## Язык  
+![image](https://github.com/user-attachments/assets/9e188162-25e2-4e74-b8b0-ee2de35651ea)
+
+## Классификация  
+Все правила вида A → α, где A ∈ Vn, α ∈ V*, поэтому грамматика является контекстно-свободной.  
+
+## Схема вызова функций  
+![сканер-Страница — 2 drawio](https://github.com/user-attachments/assets/a751adda-7aa5-4306-b3b0-aa7275ce25b8)
+
+## Тестовые примеры
+![image](https://github.com/user-attachments/assets/cfd19b98-2a59-4363-bada-43212d84d516)
+
+![image](https://github.com/user-attachments/assets/dffec883-bfd8-4742-accb-c7fc486dab98)
+
+![image](https://github.com/user-attachments/assets/3360d2ec-6d45-42f1-b2fc-6527a8b2eb19)
+
+![image](https://github.com/user-attachments/assets/77a5c48d-5fd8-4694-8d96-b6fbad60a2d1)
 
 
-Рисунок 3 - Тестовый пример 2
+## Дополнительное задание  
+## Диаграмма сканера  
+![сканер-Страница — 1 drawio](https://github.com/user-attachments/assets/2075bee3-3535-476a-96d3-2912000032bc)
 
-
-![image](https://github.com/user-attachments/assets/595525be-7716-41f1-b31c-b21bcbbaf921)
-
-
-Рисунок 4 - Тестовый пример 3
-
-
-![image](https://github.com/user-attachments/assets/c236d837-d587-4545-b95b-f354d97e58fb)
-
-
-Рисунок 5 - Тестовый пример 4
-
+## Тестовые примеры
 
 
 ## Установка
