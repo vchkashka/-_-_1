@@ -24,17 +24,24 @@
 ## Классификация  
 Все правила вида A → α, где A ∈ Vn, α ∈ V*, поэтому грамматика является контекстно-свободной.  
 
-## Схема вызова функций
-
+## Схема вызова функций  
+![сканер-Страница — 2 drawio](https://github.com/user-attachments/assets/a751adda-7aa5-4306-b3b0-aa7275ce25b8)
 
 ## Тестовые примеры
-![image](https://github.com/user-attachments/assets/d7ec921f-d5e4-4de8-8555-1acf0b083a3b)
+![image](https://github.com/user-attachments/assets/888ad60e-a964-4b42-bfca-57738fcc1ccb)
 
 ![image](https://github.com/user-attachments/assets/dffec883-bfd8-4742-accb-c7fc486dab98)
 
 ![image](https://github.com/user-attachments/assets/e6320988-0680-410d-857c-fb08cdbeb365)
 
 ![image](https://github.com/user-attachments/assets/a9f885ae-076e-49bc-bf13-764b809da538)
+
+
+## Дополнительное задание  
+## Диаграмма сканера  
+![сканер-Страница — 1 drawio](https://github.com/user-attachments/assets/2075bee3-3535-476a-96d3-2912000032bc)
+
+## Тестовые примеры
 
 
 ## Установка
