@@ -28,7 +28,7 @@
 ![сканер-Страница — 2 drawio](https://github.com/user-attachments/assets/a751adda-7aa5-4306-b3b0-aa7275ce25b8)
 
 ## Тестовые примеры
-![image](https://github.com/user-attachments/assets/888ad60e-a964-4b42-bfca-57738fcc1ccb)
+![image](https://github.com/user-attachments/assets/cfd19b98-2a59-4363-bada-43212d84d516)
 
 ![image](https://github.com/user-attachments/assets/dffec883-bfd8-4742-accb-c7fc486dab98)
 
