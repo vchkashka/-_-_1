@@ -42,6 +42,8 @@
 ![сканер-Страница — 1 drawio](https://github.com/user-attachments/assets/2075bee3-3535-476a-96d3-2912000032bc)
 
 ## Тестовые примеры
+![image](https://github.com/user-attachments/assets/27ce70f1-36fd-40cb-926e-78b07dbf7d99)
+![image](https://github.com/user-attachments/assets/fe51e58f-dd19-47a6-8cc6-df1fe8c3df14)
 
 
 ## Установка
