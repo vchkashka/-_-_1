@@ -72,7 +72,7 @@ namespace лаба_компиляторы_1
             int i = 0;
             while (i < input.Length)
             {
-                if (char.IsLetter(input[i]))
+                if (char.IsLetter(input[i]) && ((input[i] >= 'A' && input[i] <= 'Z') || (input[i] >= 'a' && input[i] <= 'z')))
                 {
                     tokens.Add(new Token("CHAR", input[i].ToString(), i));
                     i++;
@@ -87,6 +87,24 @@ namespace лаба_компиляторы_1
                         i++;
                         string tag = input.Substring(start, i - start);
                         tokens.Add(new Token("TAG", tag, start));
+                        switch (tag) 
+                        {
+                            case "<em>": break;
+                            case "<p>": break;
+                            case "<ol>": break;
+                            case "<li>": break;
+                            case "</em>": break;
+                            case "</p>": break;
+                            case "</ol>": break;
+                            case "</li>": break;
+                            default: 
+                                    Error("Недопустимый символ", start+1);
+                                    ErrorSelection(start+1, rtb);
+                                    countErrors++;
+                                    i++;
+                                 break;
+
+                        }
                     }
                     else
                     {
