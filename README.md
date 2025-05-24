@@ -32,9 +32,9 @@
 
 ![image](https://github.com/user-attachments/assets/dffec883-bfd8-4742-accb-c7fc486dab98)
 
-![image](https://github.com/user-attachments/assets/e6320988-0680-410d-857c-fb08cdbeb365)
+![image](https://github.com/user-attachments/assets/3360d2ec-6d45-42f1-b2fc-6527a8b2eb19)
 
-![image](https://github.com/user-attachments/assets/a9f885ae-076e-49bc-bf13-764b809da538)
+![image](https://github.com/user-attachments/assets/77a5c48d-5fd8-4694-8d96-b6fbad60a2d1)
 
 
 ## Дополнительное задание  
