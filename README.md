@@ -19,7 +19,7 @@
 
 
 ## Язык  
-L = {( <p> | <em> | <ol> | <li> ) symbols* ( </p> | </em> | </ol> | </li> )}  
+L = { ( <p> | <em> | <ol> | <li> ) symbols* ( </p> | </em> | </ol> | </li> ) }  
 symbols -> a|b|...|z|A|B|...|Z  
 
 ## Классификация  
