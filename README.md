@@ -19,8 +19,7 @@
 
 
 ## Язык  
-L = { ( <p> | <em> | <ol> | <li> ) symbols* ( </p> | </em> | </ol> | </li> ) }  
-symbols -> a|b|...|z|A|B|...|Z  
+![image](https://github.com/user-attachments/assets/9e188162-25e2-4e74-b8b0-ee2de35651ea)
 
 ## Классификация  
 Все правила вида A → α, где A ∈ Vn, α ∈ V*, поэтому грамматика является контекстно-свободной.  
